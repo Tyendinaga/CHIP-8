@@ -45,7 +45,7 @@ void drawGraphics()
 
 }
 
-int setupGraphics()
+GLFWwindow* setupGraphics()
 {
 
 	bool status = true;
@@ -69,7 +69,7 @@ int setupGraphics()
 	glfwMakeContextCurrent(window);
 
 
-	return status;
+	return window;
 }
 
 void setupInput()
@@ -83,13 +83,12 @@ int main()
 	chip8 processor;
 
 	//Initialize the GLFW Library
+	GLFWwindow* window = setupGraphics();
 	
-	if (!setupGraphics())
+	if (window == NULL)
 	{
 		//return EXIT_FAILURE;
 	}
-
-
 
 
 	setupInput();
@@ -97,7 +96,7 @@ int main()
 	processor.loadGame("pong");
 
 	//emulation loop
-	for (;;)
+	while (!glfwWindowShouldClose(window))
 	{
 		processor.emulateCycle();
 
@@ -108,6 +107,12 @@ int main()
 		}
 
 		processor.setKeys();
+
+
+		//Base GLFW Stuff to keep the window happy till I get shit working. 
+		glClear(GL_COLOR_BUFFER_BIT);
+		glfwSwapBuffers(window);
+		glfwPollEvents();
 
 	}
 
