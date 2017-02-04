@@ -25,6 +25,7 @@ void chip8::initialize()
 	// Load Fontset
 	for (int i = 0; i < 80; ++i)
 	{ 
+		//I don't even know what the fontset looks like yet. 
 		//memory[i] = chip8_fontset[i];
 	}
 
@@ -40,6 +41,9 @@ void chip8::emulateCycle()
 	//Decode Opcodes
 	switch (opcode & 0Xf000)
 	{
+		//IMPLEMENT ALL OF THE FUCKING OP CODES. SOMEDAY. EVENTUALLY.
+
+
 		default:
 			std::cout << "Unknown Opcode: 0x%X\n", opcode; 
 	}
@@ -69,6 +73,7 @@ void chip8::setKeys()
 
 void chip8::loadGame(std::string game)
 {
-
+	//We'll load it. Eventually.
+	//Else I wont be able to bug opcodes. 
 }
 
