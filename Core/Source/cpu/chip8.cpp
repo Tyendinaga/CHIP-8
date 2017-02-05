@@ -1,6 +1,7 @@
 //Standard Shit
 #include <string>
 #include <iostream>
+#include <fstream>
 
 //Custom Shit
 #include "../../Include/cpu/chip8.hpp"
@@ -19,12 +20,18 @@ void chip8::initialize()
 	opcode = 1;
 	index = 0;
 
+	//Debug Flag
+	halted = false;
+
+
 	// Clear Display
 	// Clear Stack
 	// Clear Registers V0 - VF
 	// Clear Memory
 
 	//This is the Fontset. 
+	//It might look like random garbage but if you compare it to its binary
+	//Representation you'll see that they 'Look' like the numbers when aligned. 
 	unsigned char fontset[80] =
 	{
 		0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -61,7 +68,24 @@ void chip8::emulateCycle()
 	// Fetch opcode
 	opcode = memory[programCounter] << 8 | memory[programCounter + 1];
 
+	/* 
+		Identifying OP Codes
+
+		So We take the OPCode and essentially apply a filter. 
+		Let's say we have an OPCode, Imma pull one out of my ass. 
+
+		0x370C
+
+		We can't make a switch with every possible op code built in so we need to filter based on their indvidual characteristics. 
+
+		if you 0x370C & 0xF000 you get a result of 0x3000. This allows us to break down the opcodes to a level where we can identify
+		The parts that identify specific operations the code itself is meant to perform, after which we can perform the actual logic with them. 
+	*/
+
 	//Decode Opcodes
+
+	
+
 	switch (opcode & 0Xf000)
 	{
 		//IMPLEMENT ALL OF THE FUCKING OP CODES. SOMEDAY. EVENTUALLY.
@@ -76,7 +100,96 @@ void chip8::emulateCycle()
 		//Have to Filter for the following op code patterns accordingly. Will probably use a switch statement. 
 
 		//Holy Fuck this will be a lot of switches. 
+
+		//Case SubSwitch
 		
+		case 0x0000: //A Bunch of codes match this pattern So we need to do more switching. 
+		{
+			switch (opcode & 0x00F)
+			{
+
+				//Not Emulated 0NNN For Reasons
+
+				//00E0 (Clear Screen)
+				case 0x0000: 
+				{
+					halted = true;
+					break;
+				}
+
+				//00EE (Return from SubRoutine)
+				case 0x000E: 
+				{
+					halted = true;
+					break;
+				}
+
+				//Shits fucked up.
+				default:
+				{
+					std::cout << "Unknown Opcode: 0x" << std::hex << opcode << std::endl;
+					halted = true;
+				}
+
+			}
+
+			break;
+
+		}
+
+		//6XNN (Sets Regiser X to value of NN)
+		case 0x6000:
+		{
+			registers[(opcode & 0x0F00) >> 8] = (opcode & 0x00FF);
+			break;
+		}
+
+		//ANNN Sets Index to NNN 
+		case 0xA000:
+		{
+
+			index = (opcode & 0x0FFF);
+			break;
+		}
+
+		//DXYN Draws a sprite at the coordinate Register X and Register Y with a width of 8 and a height of N
+		case 0xD000:
+		{
+			//Extract X, Y, and Height
+			unsigned short x = registers[(opcode & 0x0F00) >> 8];
+			unsigned short y = registers[(opcode & 0x00F0) >> 4];
+			unsigned short height = opcode & 0x000F;
+			unsigned short pixel;
+			
+			//Register F is set to 1 in the event that drawing a sprite causes pixels to be flipped off. 
+			registers[0xF] = 0;
+
+			for (int yline = 0; yline < height; yline++)
+			{
+				//The specification for this opcode notes that the index is used as a starting point for drawing the pixels
+				pixel = memory[index + yline];
+
+				//This is where we specify how wide the sprite is. 
+				for (int xline = 0; xline < 8; xline++)
+				{
+
+					//Not a hundred percent sure how exactly this math works
+					if (graphics[(x + xline + ((y + yline) * 64))] == 1)
+					{
+						registers[0xF] = 1;
+					}
+
+					graphics[x + xline + ((y + yline) * 64)] ^= 1;
+
+				}
+
+			}
+
+			drawFlag = true;
+			break;
+		}
+
+
 		//0NNN
 		//00E0
 		//00EE
@@ -113,8 +226,19 @@ void chip8::emulateCycle()
 		//FX55
 		//FX65
 
+		//Situation Normal, All fucked up. 
 		default:
+		{
 			std::cout << "Unknown Opcode: 0x" << std::hex << opcode << std::endl;
+			halted = true;
+		}
+	}
+
+	//Increment memory position provided we are not halted.
+	if (!halted)
+	{
+		programCounter += 2;
+		std::cout << "Processed Code: 0x" << std::hex << opcode << std::endl;
 	}
 
 	//Update Timers
@@ -139,10 +263,34 @@ void chip8::setKeys()
 {
     //do nothing
 }
-
-void chip8::loadGame(std::string game)
+ 
+void chip8::loadGame(std::string progName)
 {
-	//We'll load it. Eventually.
-	//Else I wont be able to bug opcodes. 
+	std::cout << "LOADING ROM: " << progName << std::endl;
+
+	//Create Get the ROM from the file system. 
+	std::ifstream rom;
+	rom.open(progName, std::ios::in | std::ios::binary);
+
+	//Check if ROM exists
+	if (!rom)
+	{
+		std::cout << "EMULATION ERROR: " << progName << " NOT FOUND" << std::endl;
+	}
+	else
+	{
+		//ROMS for the chip 8 are loaded into a space of memory that ranges from about 
+		//0x200 to 0xFFF, This gives us a total of 3583 Bytes.
+		//I don't know how well it will work but I'll just grab the whole from file.
+		char programBuffer[3583];
+		rom.read(programBuffer, sizeof programBuffer);
+
+		//Load ROM into Memory
+		for (int i = 0; i < sizeof programBuffer; i++)
+		{
+			memory[i + 512] = programBuffer[i];
+		}
+
+	}
 }
 

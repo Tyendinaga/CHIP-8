@@ -9,6 +9,9 @@ class chip8 {
 	public:
 		//Variables. Will Probably have to make private
 
+
+		bool halted; //Debug Use Only
+
 		//Chip 8 OP Codes
 		unsigned short opcode;
 
@@ -23,7 +26,7 @@ class chip8 {
 		unsigned short programCounter;
 
 		//Chip 8 Video Graphics
-		unsigned char gfx[64 * 32];
+		unsigned char graphics[64 * 32];
 
 		//Chip 8 Timer Registers
 		unsigned char delayTimer;
