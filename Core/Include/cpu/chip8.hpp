@@ -5,8 +5,6 @@
 
 class chip8 {
 	private:
-
-
     
 	public:
 		//Variables. Will Probably have to make private
