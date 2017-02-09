@@ -25,7 +25,14 @@ void chip8::initialize()
 
 
 	// Clear Display
-	// Clear Stack
+	
+	//Clear Stack
+	stackPosition = 0;
+	for (int i = 0; i < 15; i++)
+	{
+		stack[i] = 0;
+	}
+
 	// Clear Registers V0 - VF
 	// Clear Memory
 
@@ -137,6 +144,19 @@ void chip8::emulateCycle()
 
 		}
 
+		//2NNN Calls Subroutine at NNN
+		case 0x2000:
+		{
+			//Set the current program counter to the stack position and increment
+			stack[stackPosition] = programCounter;
+			stackPosition++;
+
+			//Set Prorgam Counter to the Subroutine
+			programCounter = (opcode & 0x0FFF);
+			break;
+		}
+
+
 		//6XNN (Sets Regiser X to value of NN)
 		case 0x6000:
 		{
@@ -229,7 +249,6 @@ void chip8::emulateCycle()
 		//Situation Normal, All fucked up. 
 		default:
 		{
-			std::cout << "Unknown Opcode: 0x" << std::hex << opcode << std::endl;
 			halted = true;
 		}
 	}
@@ -239,6 +258,10 @@ void chip8::emulateCycle()
 	{
 		programCounter += 2;
 		std::cout << "Processed Code: 0x" << std::hex << opcode << std::endl;
+	}
+	else
+	{
+		std::cout << "Unknown Opcode: 0x" << std::hex << opcode << std::endl;
 	}
 
 	//Update Timers
