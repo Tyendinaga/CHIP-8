@@ -147,10 +147,11 @@ int main()
 		if (!processor.halted)
 			processor.emulateCycle();
 
-		drawGraphics(window);
+		//drawGraphics(window);
 		if (processor.drawFlag)
 		{
-			//drawGraphics(window);
+			drawGraphics(window);
+			processor.drawFlag = false;
 		}
 
 		processor.setKeys();

@@ -109,8 +109,7 @@ void chip8::emulateCycle()
 		//Holy Fuck this will be a lot of switches. 
 
 		//Case SubSwitch
-		
-		case 0x0000: //A Bunch of codes match this pattern So we need to do more switching. 
+		case 0x000: //A Bunch of codes match this pattern So we need to do more switching. 
 		{
 			switch (opcode & 0x00F)
 			{
@@ -144,6 +143,14 @@ void chip8::emulateCycle()
 
 		}
 
+
+		//1NNN
+		case 0x1000:
+		{
+			halted = true;
+			break;
+		}
+
 		//2NNN Calls Subroutine at NNN
 		case 0x2000:
 		{
@@ -156,6 +163,27 @@ void chip8::emulateCycle()
 			break;
 		}
 
+		//3XNN
+		case 0x3000:
+		{
+			halted = true;
+			break;
+		}
+
+		//4XNN
+		case 0x4000:
+		{
+			halted = true;
+			break;
+		}
+
+		//5XY0
+		case 0x5000:
+		{
+			halted = true;
+			break;
+		}
+
 
 		//6XNN (Sets Regiser X to value of NN)
 		case 0x6000:
@@ -164,11 +192,106 @@ void chip8::emulateCycle()
 			break;
 		}
 
+		//7XNN
+		case 0x7000:
+		{
+			halted = true;
+			break;
+		}
+
+		//8XY0 Through 8XYE
+		case 0x8000:
+		{
+			switch (opcode & 0x000f)
+			{
+				//8XY0
+				case 0x0000:
+				{
+					halted = true;
+					break;
+				}
+
+				//8XY1
+				case 0x0001:
+				{
+					halted = true;
+					break;
+				}
+
+				//8XY2
+				case 0x0002:
+				{
+					halted = true;
+					break;
+				}
+
+				//8XY3
+				case 0x0003:
+				{
+					halted = true;
+					break;
+				}
+				//8XY4
+				case 0x0004:
+				{
+					halted = true;
+					break;
+				}
+				//8XY5
+				case 0x0005:
+				{
+					halted = true;
+					break;
+				}
+				//8XY6
+				case 0x0006:
+				{
+					halted = true;
+					break;
+				}
+				//8XY7
+				case 0x0007:
+				{
+					halted = true;
+					break;
+				}
+				//8XYE
+				case 0x000E:
+				{
+					halted = true;
+					break;
+				}
+
+			}
+			break;
+		}
+
+		//9XY0
+		case 0x9000:
+		{
+			halted = true;
+			break;
+		}
+
 		//ANNN Sets Index to NNN 
 		case 0xA000:
 		{
 
 			index = (opcode & 0x0FFF);
+			break;
+		}
+
+		//BNNN
+		case 0xB000:
+		{
+			halted = true;
+			break;
+		}
+
+		//CXNN
+		case 0xC000:
+		{
+			halted = true;
 			break;
 		}
 
@@ -210,41 +333,102 @@ void chip8::emulateCycle()
 		}
 
 
-		//0NNN
-		//00E0
-		//00EE
-		//1NNN
-		//2NNN
-		//3XNN
-		//4XNN
-		//5XY0
-		//6XNN
-		//7XNN
-		//8XY0
-		//8XY1
-		//8XY2
-		//8XY3
-		//8XY4
-		//8XY5
-		//8XY6
-		//8XY7
-		//8XYE
-		//9XY0
-		//ANNN
-		//BNNN
 		//CXNN
-		//DXYN
-		//EX9E
-		//EXA1
-		//FX07
-		//FX0A
-		//FX15
-		//FX18
-		//FX1E
-		//FX29
-		//FX33
-		//FX55
-		//FX65
+		case 0xE000:
+		{
+			switch (opcode & 0x00ff)
+			{
+				//EX9E
+				case 0x009E:
+				{
+					halted = true;
+					break;
+				}
+
+				//EXA1
+				case 0x00A1:
+				{
+					halted = true;
+					break;
+				}
+			}
+
+			break;
+		}
+
+		//FX07 THROUGH FX65
+		case 0xf000:
+		{
+			switch (opcode & 0x00ff)
+			{
+				//FX07
+				case 0x0007:
+				{
+					halted = true;
+					break;
+				}
+
+				//FX0A
+				case 0x000A:
+				{
+					halted = true;
+					break;
+				}
+
+				//FX15
+				case 0x0015:
+				{
+					halted = true;
+					break;
+				}
+
+				//FX18
+				case 0x0018:
+				{
+					halted = true;
+					break;
+				}
+
+				//FX1E
+				case 0x001E:
+				{
+					halted = true;
+					break;
+				}
+
+				//FX29
+				case 0x0029:
+				{
+					halted = true;
+					break;
+				}
+
+				//FX33
+				case 0x0033:
+				{
+					memory[index] = registers[(opcode & 0x0F00) >> 8] / 100;
+					memory[index + 1] = (registers[(opcode & 0x0F00) >> 8] / 10 % 10);
+					memory[index + 2] = (registers[(opcode & 0x0F00) >> 8] % 100) % 10;
+					break;
+				}
+
+				//FX55
+				case 0x0055:
+				{
+					halted = true;
+					break;
+				}
+
+				//FX07
+				case 0x0065:
+				{
+					halted = true;
+					break;
+				}
+			}
+
+			break;
+		}
 
 		//Situation Normal, All fucked up. 
 		default:
