@@ -192,10 +192,10 @@ void chip8::emulateCycle()
 			break;
 		}
 
-		//7XNN
+		//7XNN (Adds value of NN to register X)
 		case 0x7000:
 		{
-			halted = true;
+			registers[(opcode & 0x0F00) >> 8] += (opcode & 0x00FF);
 			break;
 		}
 
