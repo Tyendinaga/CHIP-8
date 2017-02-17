@@ -422,7 +422,12 @@ void chip8::emulateCycle()
 				//FX07
 				case 0x0065:
 				{
-					halted = true;
+
+					for (int i = 0; i < ((opcode & 0x0F00) >> 8); i++)
+					{
+						registers[i] = memory[index + i];
+					}
+
 					break;
 				}
 			}
