@@ -399,7 +399,8 @@ void chip8::emulateCycle()
 				//FX29
 				case 0x0029:
 				{
-					halted = true;
+					index = registers[(opcode & 0x0F00) >> 8];
+
 					break;
 				}
 
@@ -419,7 +420,7 @@ void chip8::emulateCycle()
 					break;
 				}
 
-				//FX07
+				//FX65
 				case 0x0065:
 				{
 
