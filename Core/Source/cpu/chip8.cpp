@@ -166,10 +166,14 @@ void chip8::emulateCycle()
 			break;
 		}
 
-		//3XNN
+		//3XNN (Jumps an extra instruction if Register X is equal to NN)
 		case 0x3000:
 		{
-			halted = true;
+			if (registers[(opcode & 0x0F00) >> 8] == (opcode & 0x00FF))
+			{
+				programCounter += 2;
+			}
+
 			break;
 		}
 
