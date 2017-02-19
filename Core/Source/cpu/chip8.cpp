@@ -126,7 +126,10 @@ void chip8::emulateCycle()
 				//00EE (Return from SubRoutine)
 				case 0x000E: 
 				{
-					halted = true;
+					//Return back to the previous stack position and set program counter to the stored address
+					stackPosition--;
+					programCounter = stack[stackPosition];
+
 					break;
 				}
 
@@ -158,7 +161,7 @@ void chip8::emulateCycle()
 			stack[stackPosition] = programCounter;
 			stackPosition++;
 
-			//Set Prorgam Counter to the Subroutine
+			//Set Program Counter to the Subroutine
 			programCounter = (opcode & 0x0FFF);
 			break;
 		}
