@@ -364,10 +364,10 @@ void chip8::emulateCycle()
 		{
 			switch (opcode & 0x00ff)
 			{
-				//FX07
+				//FX07 Set Register X to Delay Timer
 				case 0x0007:
 				{
-					halted = true;
+					registers[(opcode & 0x0F00) >> 8] = delayTimer;
 					break;
 				}
 
