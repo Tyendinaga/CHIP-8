@@ -378,10 +378,11 @@ void chip8::emulateCycle()
 					break;
 				}
 
-				//FX15
+				//FX15, Set delay time to X
 				case 0x0015:
 				{
-					halted = true;
+					delayTimer = (opcode & 0x0F00) >> 8;
+
 					break;
 				}
 
