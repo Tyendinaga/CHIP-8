@@ -298,7 +298,7 @@ void chip8::emulateCycle()
 		//CXNN
 		case 0xC000:
 		{
-			halted = true;
+			registers[(opcode & 0x0F00) >> 8] = rand() & (opcode & 0x00FF);
 			break;
 		}
 
