@@ -225,10 +225,10 @@ void chip8::emulateCycle()
 					break;
 				}
 
-				//8XY2
+				//8XY2 Set X to X AND Y
 				case 0x0002:
 				{
-					halted = true;
+					registers[(opcode & 0x0F00) >> 8] = registers[(opcode & 0x0F00) >> 8] & registers[(opcode & 0x00F0) >> 4];
 					break;
 				}
 
