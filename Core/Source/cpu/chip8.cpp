@@ -345,17 +345,27 @@ void chip8::emulateCycle()
 		{
 			switch (opcode & 0x00ff)
 			{
-				//EX9E
+				//EX9E skip instruction if KEY in VX is pressed.
 				case 0x009E:
 				{
-					halted = true;
+
+					if (key[registers[(opcode & 0x0F00 >> 8)]] != 0)
+					{
+						programCounter += 2;
+					}
+
 					break;
 				}
 
-				//EXA1
+				//EXA1 Skip instruction if KEY in VX is not pressed.
 				case 0x00A1:
 				{
-					halted = true;
+
+					if (key[registers[(opcode & 0x0F00 >> 8)]] == 0)
+					{
+						programCounter += 2;
+					}
+
 					break;
 				}
 			}
