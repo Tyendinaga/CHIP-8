@@ -241,7 +241,12 @@ void chip8::emulateCycle()
 				//8XY4
 				case 0x0004:
 				{
-					halted = true;
+					if (registers[(opcode & 0x00F0) >> 4] > (0xFF - registers[(opcode & 0x0F00) >> 8]))
+						registers[0xF] = 1; //carry
+					else
+						registers[0xF] = 0;
+					registers[(opcode & 0x0F00) >> 8] += registers[(opcode & 0x00F0) >> 4];
+
 					break;
 				}
 				//8XY5
