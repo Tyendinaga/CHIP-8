@@ -147,10 +147,11 @@ void chip8::emulateCycle()
 		}
 
 
-		//1NNN
+		//1NNN Jumps to Addres NNN
 		case 0x1000:
 		{
-			halted = true;
+			programCounter = (opcode & 0x0FFF);
+
 			break;
 		}
 
@@ -177,10 +178,14 @@ void chip8::emulateCycle()
 			break;
 		}
 
-		//4XNN
+		//4XNN Jumps an extra instruction is Register X doesn't equal NN
 		case 0x4000:
 		{
-			halted = true;
+			if (registers[(opcode & 0x0F00) >> 8] != (opcode & 0x00FF))
+			{
+				programCounter += 2;
+			}
+
 			break;
 		}
 
