@@ -9,7 +9,7 @@
 #include <GLFW\glfw3.h>
 
 //Custom Shit
-#include "../Include/cpu/chip8.hpp"
+#include "../../Core/Include/display/display.hpp"
 
 void drawGraphics(GLFWwindow* window)
 {
