@@ -1,9 +1,61 @@
+//Standard Windows Crap
+#include <iostream>
+
 //External Shit
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
+
+//Custom Shit
 #include "../../Include/display/display.hpp"
 
+//Constructor
+display::display()
+{
 
+}
+
+//Setup OpenGL Context
+GLFWwindow* display::setupGraphics()
+{
+	std::cout << "GLFW Initializing" << std::endl;
+
+	GLFWwindow* window;
+
+	/* Initialize the library */
+	if (!glfwInit())
+	{
+		std::cout << "GLFW Initialization Failed" << std::endl;
+		return NULL;
+	}
+
+	window = glfwCreateWindow(640, 320, "EmuC80", NULL, NULL);
+	if (!window)
+	{
+		std::cout << "GLFW Window Failure" << std::endl;
+		glfwTerminate();
+		return NULL;
+	}
+
+	//Make the window's context current
+	glewExperimental = GL_TRUE;
+	glfwMakeContextCurrent(window);
+
+	//Starting GLEW Extension Handler
+	glewInit();
+
+	// Get info of GPU and supported OpenGL version
+	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+	std::cout << "OpenGL Version Supported: " << glGetString(GL_VERSION) << std::endl;
+
+	//Draw once to Make things Nice
+	glClear(GL_COLOR_BUFFER_BIT);
+	glfwSwapBuffers(window);
+
+	return window;
+}
+
+
+//Draw Game Shit
 void display::drawGraphics(GLFWwindow* window)
 {
 	glClear(GL_COLOR_BUFFER_BIT);

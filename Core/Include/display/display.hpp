@@ -9,10 +9,18 @@
 class display {
 private:
 
+	//OpenGL Context
+	GLFWwindow* window;
+
 public:
 
+	//Construction
+	display();
+
 	//Functions
+	GLFWwindow * setupGraphics();
 	void drawGraphics(GLFWwindow* window);
+	
 };
 
 #endif /* DISPLAY_HPP */

@@ -9,69 +9,48 @@
 #include <GLFW\glfw3.h>
 
 //Custom Shit
-#include "../../Core/Include/display/display.hpp"
+#include "../include/cpu/chip8.hpp"
+#include "../include/display/display.hpp"
 
-void drawGraphics(GLFWwindow* window)
+void drawGraphics(GLFWwindow* window, chip8 processor)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	//Testing Stuff
-	float points[] = {
-		0.0f,  0.5f,  0.0f,
-		0.5f, -0.5f,  0.0f,
-		-0.5f, -0.5f,  0.0f
-	};
 
-	//Magic OpenGL Nonsense I don't remotely understand. 
-	GLuint vbo;
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);
 
-	//Shit I understand even less
-	GLuint vao = 0;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	int modifier = 1;
 
-	//Magical Shader Bullshit
-	const char* vertex_shader =
-		"#version 400\n"
-		"in vec3 vp;"
-		"void main() {"
-		"  gl_Position = vec4(vp, 1.0);"
-		"}";
 
-	const char* fragment_shader =
-		"#version 400\n"
-		"out vec4 frag_colour;"
-		"void main() {"
-		"  frag_colour = vec4(0.5, 0.0, 0.5, 1.0);"
-		"}";
+	//Increment through Processor graphics array
+	for (int y = 0; y < 32; y++)
+	{
+		for (int x = 0; x < 64; x++)
+		{
 
-	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vs, 1, &vertex_shader, NULL);
-	glCompileShader(vs);
-	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fs, 1, &fragment_shader, NULL);
-	glCompileShader(fs);
+			if (processor.graphics[(y * 64) + x] == 0)
+			{
+				glColor3f(1.0f, 1.0f, 1.0f);
+			}
+			else
+			{
+				glColor3f(1.0f, 0.0f, 1.0f);
+			}
 
-	GLuint shader_programme = glCreateProgram();
-	glAttachShader(shader_programme, fs);
-	glAttachShader(shader_programme, vs);
-	glLinkProgram(shader_programme);
+		}
+	}
 
-	//The Magic
-	glUseProgram(shader_programme);
-	glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glBegin(GL_QUADS);
+	glVertex2f(0.0f, 1.0f);
+	glVertex2f(0.0f, 0.0f);
+	glVertex2f(1.0f, 0.0f);
+	glVertex2f(1.0f, 1.0f);
+	glEnd();
 
-	//End Testing
-
+	//glPopMatrix();
+	//glFlush();
 
 	glfwSwapBuffers(window);
+
 }
 
 GLFWwindow* setupGraphics()
@@ -80,14 +59,18 @@ GLFWwindow* setupGraphics()
 
 	GLFWwindow* window;
 
-	/* Initialize the library */
+	//Initializa the Library
 	if (!glfwInit())
-	{ 
+	{
 		std::cout << "GLFW Initialization Failed" << std::endl;
 		return NULL;
 	}
 
-	window = glfwCreateWindow(640, 320, "EmuC80", NULL, NULL);
+	//Window Hints
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
+	window = glfwCreateWindow(640, 320, "EmuC8", NULL, NULL);
 	if (!window)
 	{
 		std::cout << "GLFW Window Failure" << std::endl;
@@ -105,6 +88,11 @@ GLFWwindow* setupGraphics()
 	// Get info of GPU and supported OpenGL version
 	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 	std::cout << "OpenGL Version Supported: " << glGetString(GL_VERSION) << std::endl;
+
+	//Fix Aspect Ratio
+	glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
+	//gluPerspective(120, 320.0f / 640.0f, 0.01f, 100.0f);
 
 	//Draw once to Make things Nice
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -125,12 +113,11 @@ int main()
 
 	//Initialize the GLFW Library
 	GLFWwindow* window = setupGraphics();
-	
+
 	if (window == NULL)
 	{
 		return EXIT_FAILURE;
 	}
-
 
 	setupInput();
 	processor.initialize();
@@ -145,20 +132,24 @@ int main()
 		std::this_thread::sleep_for(std::chrono::milliseconds(16));
 
 		if (!processor.halted)
+		{
 			processor.emulateCycle();
+		}
+
 
 		//drawGraphics(window);
 		if (processor.drawFlag)
 		{
-			drawGraphics(window);
+			drawGraphics(window, processor);
 			processor.drawFlag = false;
+
+			//processor.debugRender();
 		}
 
 		processor.setKeys();
 
 		//Base GLFW Stuff to keep the window happy till I get shit working. 
 		glfwPollEvents();
-
 	}
 
 	//Close out everything and call it successful

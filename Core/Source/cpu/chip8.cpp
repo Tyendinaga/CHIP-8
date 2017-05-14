@@ -23,8 +23,11 @@ void chip8::initialize()
 	//Debug Flag
 	halted = false;
 
-
 	// Clear Display
+	for (int i = 0; i < 2048; i++)
+	{
+		graphics[i] = 0;
+	}
 	
 	//Clear Stack
 	stackPosition = 0;
@@ -34,7 +37,14 @@ void chip8::initialize()
 	}
 
 	// Clear Registers V0 - VF
+
+
 	// Clear Memory
+	for (int i = 0; i < 2048; i++)
+	{
+		memory[i] = 0;
+	}
+
 
 	//This is the Fontset. 
 	//It might look like random garbage but if you compare it to its binary
@@ -333,13 +343,17 @@ void chip8::emulateCycle()
 				for (int xline = 0; xline < 8; xline++)
 				{
 
-					//Not a hundred percent sure how exactly this math works
-					if (graphics[(x + xline + ((y + yline) * 64))] == 1)
+					if ((pixel & (0x80 >> xline)) != 0)
 					{
-						registers[0xF] = 1;
-					}
 
-					graphics[x + xline + ((y + yline) * 64)] ^= 1;
+						//Not a hundred percent sure how exactly this math works
+						if (graphics[(x + xline + ((y + yline) * 64))] == 1)
+						{
+							registers[0xF] = 1;
+						}
+
+						graphics[x + xline + ((y + yline) * 64)] ^= 1;
+					}
 
 				}
 
@@ -475,11 +489,11 @@ void chip8::emulateCycle()
 	if (!halted)
 	{
 		programCounter += 2;
-		std::cout << "Processed Code: 0x" << std::hex << opcode << std::endl;
+		//std::cout << "Processed Code: 0x" << std::hex << opcode << std::endl;
 	}
 	else
 	{
-		std::cout << "Unknown Opcode: 0x" << std::hex << opcode << std::endl;
+		//std::cout << "Unknown Opcode: 0x" << std::hex << opcode << std::endl;
 	}
 
 	//Update Timers
@@ -503,6 +517,27 @@ void chip8::emulateCycle()
 void chip8::setKeys()
 {
     //do nothing
+}
+
+void chip8::debugRender()
+{
+	system("cls");
+
+	// draw
+	for (int y = 0; y < 32; ++y)
+	{
+		for (int x = 0; x < 64; ++x)
+		{
+				if (graphics[(y * 64) + x] == 0)
+					std::cout << "O";
+				else
+					std::cout << " ";
+			}
+		std::cout << std::endl;
+		}
+	std::cout << std::endl;
+	
+
 }
  
 void chip8::loadGame(std::string progName)
