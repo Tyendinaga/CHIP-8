@@ -3,8 +3,10 @@
 
 
 //External Shit
-#include <GL\glew.h>
+#include <glad\glad.h>
 #include <GLFW\glfw3.h>
+#include <cpu\chip8.hpp>
+#include <vector>
 
 class display {
 private:
@@ -12,14 +14,23 @@ private:
 	//OpenGL Context
 	GLFWwindow* window;
 
+	//Shader Program
+	int shaderProgram;
+
+	//Thingers
+	unsigned int VBO;
+	unsigned int VAO;
+	unsigned int VAO2;
+
 public:
 
-	//Construction
-	display();
-
 	//Functions
-	GLFWwindow * setupGraphics();
-	void drawGraphics(GLFWwindow* window);
+	bool initialize();
+	void drawGraphics(chip8 processor);
+	bool shouldClose();
+	static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+	
+	unsigned int generate(std::vector<float> vertices);
 	
 };
 

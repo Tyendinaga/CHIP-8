@@ -36,6 +36,9 @@
     <ClCompile Include="Source\display\display.cpp">
       <Filter>Source Files\display</Filter>
     </ClCompile>
+    <ClCompile Include="Source\display\glad.c">
+      <Filter>Source Files\display</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\cpu\chip8.hpp">

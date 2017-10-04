@@ -489,11 +489,11 @@ void chip8::emulateCycle()
 	if (!halted)
 	{
 		programCounter += 2;
-		//std::cout << "Processed Code: 0x" << std::hex << opcode << std::endl;
+		std::cout << "Processed Code: 0x" << std::hex << opcode << std::endl;
 	}
 	else
 	{
-		//std::cout << "Unknown Opcode: 0x" << std::hex << opcode << std::endl;
+		std::cout << "Unknown Opcode: 0x" << std::hex << opcode << std::endl;
 	}
 
 	//Update Timers

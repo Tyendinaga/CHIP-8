@@ -1,120 +1,352 @@
 //Standard Windows Crap
 #include <iostream>
+#include <vector>
 
 //External Shit
-#include <GL\glew.h>
+#include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
 //Custom Shit
-#include "../../Include/display/display.hpp"
+#include "display\display.hpp"
 
-//Constructor
-display::display()
+bool display::initialize()
 {
+	
+	//WW      WW IIIII NN   NN DDDDD    OOOOO  WW      WW 
+	//WW      WW  III  NNN  NN DD  DD  OO   OO WW      WW 
+	//WW   W  WW  III  NN N NN DD   DD OO   OO WW   W  WW 
+	// WW WWW WW  III  NN  NNN DD   DD OO   OO  WW WWW WW 
+	//  WW   WW  IIIII NN   NN DDDDDD   OOOO0    WW   WW  
 
-}
-
-//Setup OpenGL Context
-GLFWwindow* display::setupGraphics()
-{
 	std::cout << "GLFW Initializing" << std::endl;
-
-	GLFWwindow* window;
 
 	/* Initialize the library */
 	if (!glfwInit())
 	{
 		std::cout << "GLFW Initialization Failed" << std::endl;
-		return NULL;
+		return false;
 	}
 
+	//Window Hints
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	//Creater a 640 by 320 Window to play the game in. 
 	window = glfwCreateWindow(640, 320, "EmuC80", NULL, NULL);
 	if (!window)
 	{
 		std::cout << "GLFW Window Failure" << std::endl;
 		glfwTerminate();
-		return NULL;
+		return false;
 	}
 
-	//Make the window's context current
-	glewExperimental = GL_TRUE;
+	//Set Context (Must be before GLAD)
 	glfwMakeContextCurrent(window);
 
-	//Starting GLEW Extension Handler
-	glewInit();
+	//Set Resize Function
+	glfwSetFramebufferSizeCallback(window, this->framebufferSizeCallback);
 
-	// Get info of GPU and supported OpenGL version
-	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-	std::cout << "OpenGL Version Supported: " << glGetString(GL_VERSION) << std::endl;
+	//Initialize GLAD
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		return false;
+	}
 
-	//Draw once to Make things Nice
-	glClear(GL_COLOR_BUFFER_BIT);
-	glfwSwapBuffers(window);
+	// SSSSS  HH   HH   AAA   DDDDD   EEEEEEE RRRRRR   SSSSS  
+	//SS      HH   HH  AAAAA  DD  DD  EE      RR   RR SS      
+	// SSSSS  HHHHHHH AA   AA DD   DD EEEEE   RRRRRR   SSSSS  
+	//     SS HH   HH AAAAAAA DD   DD EE      RR  RR       SS 
+	// SSSSS  HH   HH AA   AA DDDDDD  EEEEEEE RR   RR  SSSSS  
 
-	return window;
-}
+	//SHADER COMPILATION VARIABLES
+	//----------------------------
+	int compiled;
+	char compileLog[512];
+
+	//SHADER SOURCE CODE
+	//------------------
+	char *vertexShaderSource = "#version 330 core\n"
+		"layout (location = 0) in vec3 aPos;\n"
+		"void main()\n"
+		"{\n"
+		"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+		"}\0";
+
+	char *fragmentShaderSource = "#version 330 core\n"
+		"out vec4 FragColor;\n"
+		"void main()\n"
+		"{\n"
+		"   FragColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);\n"
+		"}\n\0";
+
+	//COMPILE VERTEX SHADER
+	//---------------------
+	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glCompileShader(vertexShader);
+
+	//CHECK SHADER COMPILATION
+	//------------------------
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &compiled);
+	if (!compiled)
+	{
+		glGetShaderInfoLog(vertexShader, 512, NULL, compileLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << compileLog << std::endl;
+	}
+
+	//COMPILE FRAGMENT SHADER
+	//-----------------------
+	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
+
+	//CHECK SHADER COMPILATION
+	//------------------------
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &compiled);
+	if (!compiled)
+	{
+		glGetShaderInfoLog(vertexShader, 512, NULL, compileLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << compileLog << std::endl;
+	}
+
+	//LINK SHADER PROGRAM
+	//-------------------
+	shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+
+	//CHECK SHADER LINKAGE
+	//--------------------
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &compiled);
+	if (!compiled) 
+	{
+		glGetProgramInfoLog(shaderProgram, 512, NULL, compileLog);
+		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << compileLog << std::endl;
+	}
+
+	//CLEANUP SHADER ARTIFACTS
+	//------------------------
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+	//VV     VV EEEEEEE RRRRRR  TTTTTTT EEEEEEE XX    XX        DDDDD     AAA   TTTTTTT   AAA   
+	//VV     VV EE      RR   RR   TTT   EE       XX  XX         DD  DD   AAAAA    TTT    AAAAA  
+	// VV   VV  EEEEE   RRRRRR    TTT   EEEEE     XXXX   _____  DD   DD AA   AA   TTT   AA   AA 
+	//  VV VV   EE      RR  RR    TTT   EE       XX  XX         DD   DD AAAAAAA   TTT   AAAAAAA 
+	//   VVV    EEEEEEE RR   RR   TTT   EEEEEEE XX    XX        DDDDDD  AA   AA   TTT   AA   AA 
 
 
-//Draw Game Shit
-void display::drawGraphics(GLFWwindow* window)
-{
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	//Testing Stuff
-	float points[] = {
-		0.0f,  0.5f,  0.0f,
-		0.5f, -0.5f,  0.0f,
-		-0.5f, -0.5f,  0.0f
+	/*
+	//MAKE A TRIANGLE
+	//---------------
+	float vertices[] = {
+		-0.5f, -0.5f, 0.0f, // left  
+		0.5f, -0.5f, 0.0f, // right 
+		0.0f,  0.5f, 0.0f  // top   
 	};
 
-	//Magic OpenGL Nonsense I don't remotely understand. 
-	GLuint vbo;
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);
+	float vertices2[] = {
+		-0.7f, -0.7f, 0.0f, // left  
+		0.3f, -0.3f, 0.0f, // right 
+		0.0f,  0.7f, 0.0f  // top   
+	};
 
-	//Shit I understand even less
-	GLuint vao = 0;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	//GENERATE ARRAYS AND BUFFERS
+	//---------------------------
+	glGenVertexArrays(1, &VAO);
+	glGenVertexArrays(1, &VAO2);
+	glGenBuffers(1, &VBO);
+
+	//BINDING
+	//-------
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	//BIND VBO
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-	//Magical Shader Bullshit
-	const char* vertex_shader =
-		"#version 400\n"
-		"in vec3 vp;"
-		"void main() {"
-		"  gl_Position = vec4(vp, 1.0);"
-		"}";
+	//Unbind VAO
+	glBindVertexArray(0);
 
-	const char* fragment_shader =
-		"#version 400\n"
-		"out vec4 frag_colour;"
-		"void main() {"
-		"  frag_colour = vec4(0.5, 0.0, 0.5, 1.0);"
-		"}";
+	//Unbind Buffer
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	*/
+	/* Prior Code
+	//GENERATE ARRAYS AND BUFFERS
+	//---------------------------
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
 
-	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vs, 1, &vertex_shader, NULL);
-	glCompileShader(vs);
-	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fs, 1, &fragment_shader, NULL);
-	glCompileShader(fs);
+	//BINDING
+	//-------
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
 
-	GLuint shader_programme = glCreateProgram();
-	glAttachShader(shader_programme, fs);
-	glAttachShader(shader_programme, vs);
-	glLinkProgram(shader_programme);
+	//BIND VBO
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
 
-	//The Magic
-	glUseProgram(shader_programme);
-	glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	//Unbind Buffer
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	//End Testing
+	//Unbind VAO
+	glBindVertexArray(0);*/
 
+	return true;
+}
+
+//Draw Game Shit
+void display::drawGraphics(chip8 processor)
+{
+
+	//VAO Storage
+	std::vector<unsigned int> VAOa;
+	std::vector<unsigned int>::iterator VAOi;
+
+	//Iterate Through Rows
+	for (int y = 0; y < 32; ++y)
+	{
+		//Iterate Through Columns
+		for (int x = 0; x < 64; ++x)
+		{
+			if (processor.graphics[(y * 64) + x] == 0)
+			{
+
+				//Offsets
+				float yOffset = 0.0625f;
+				float xOffset = 0.03125f;
+
+				//Offset Pixel
+				std::vector<float> vertices1 = {
+					-1.0f + (xOffset * x), 0.9375f - (yOffset * y), 0.0f, // Bottom Left Corner
+
+					-0.96875f + (xOffset * x), 1.0f - (yOffset * y), 0.0f, // Top right 
+
+					-1.0f + (xOffset * x),  1.0f - (yOffset * y), 0.0f  // Top Left Corner
+				};
+
+				std::vector<float> vertices2 = {
+					-1.0f + (xOffset * x) , 0.9375f - (yOffset * y), 0.0f, // Bottom Left Corner
+
+					-0.96875f + (xOffset * x), 1.0f - (yOffset * y), 0.0f,  // Top right 
+
+					-0.96875f + (xOffset * x), 0.9375f - (yOffset * y), 0.0f  // Bottom Right Corner
+				};
+
+				//Add 'Pixel'
+				VAOa.push_back(generate(vertices1));
+				VAOa.push_back(generate(vertices2));
+			}
+		}
+		std::cout << std::endl;
+	}
+	
+
+	//MAKE A TRIANGLE
+	//---------------
+	/*
+	std::vector<float> vertices = {
+		-0.7f, -0.7f, 0.0f, // left  
+		0.3f, -0.3f, 0.0f, // right 
+		0.0f,  0.7f, 0.0f  // top   
+	};*/
+
+	/*
+	//Height Y 0.0625
+	//Width X 0.03125
+
+	std::vector<float> vertices1= {
+		-1.0f, 0.9375f, 0.0f, // Bottom Left Corner
+		-0.96875f, 1.0f, 0.0f, // Top right 
+		-1.0f,  1.0f, 0.0f  // Top Left Corner
+	};
+
+	std::vector<float> vertices2 = {
+		-1.0f, 0.9375f, 0.0f, // Bottom Left Corner
+		-0.96875f, 1.0f, 0.0f,  // Top right 
+		-0.96875f, 0.9375f, 0.0f  // Bottom Right Corner
+	};
+
+
+	VAOa.push_back(generate(vertices1));
+	VAOa.push_back(generate(vertices2));*/
+
+	//RENDER BACKGROUND COLOUR
+	//------------------------
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	//DRAW OUR TRIANGLE
+	//-----------------
+	glUseProgram(shaderProgram);
+
+	//Iterate through VAO Vector
+	for (VAOi = VAOa.begin(); VAOi < VAOa.end(); VAOi++)
+	{
+		glBindVertexArray(*VAOi);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+	}
+
+	//glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	glfwSwapBuffers(window);
+
+	//
+	VAOa.clear();
+	//delete &VAOi;
+
+	//Kill
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
 }
+
+unsigned int display::generate(std::vector<float> vertices)
+{
+	
+	//Get Size of Vertices Vector in Bytes
+	GLsizei size = vertices.size() * sizeof(vertices[0]);
+
+	//GENERATE ARRAYS AND BUFFERS
+	//---------------------------
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	//BINDING
+	//-------
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, size, &vertices[0], GL_STATIC_DRAW);
+
+	//BIND VBO
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	//Do not Work with Vertex Array
+	glBindVertexArray(0);
+
+	//Do not work with Buffer
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//This points to some shit on Memory
+	return VAO;
+}
+
+bool display::shouldClose()
+{
+	return glfwWindowShouldClose(window);
+}
+
+void display::framebufferSizeCallback(GLFWwindow * window, int width, int height)
+{
+	std::cout << "Frame Buffer Updated" << std::endl;
+	glViewport(0, 0, width, height);
+}
+
+
