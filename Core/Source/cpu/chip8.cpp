@@ -226,10 +226,10 @@ void chip8::emulateCycle()
 		{
 			switch (opcode & 0x000f)
 			{
-				//8XY0
+				//8XY0 Set X to Y
 				case 0x0000:
 				{
-					halted = true;
+					registers[(opcode & 0x0F00) >> 8] = registers[(opcode & 0x0F00) >> 8];
 					break;
 				}
 
@@ -253,7 +253,7 @@ void chip8::emulateCycle()
 					halted = true;
 					break;
 				}
-				//8XY4
+				//8XY4 X = X + Y
 				case 0x0004:
 				{
 					if (registers[(opcode & 0x00F0) >> 4] > (0xFF - registers[(opcode & 0x0F00) >> 8]))
@@ -264,10 +264,14 @@ void chip8::emulateCycle()
 
 					break;
 				}
-				//8XY5
+				//8XY5 X = X - Y;
 				case 0x0005:
 				{
-					halted = true;
+					if (registers[(opcode & 0x00F0) >> 4] > registers[(opcode & 0x0F00) >> 8])
+						registers[0xF] = 0; // Borrow
+					else
+						registers[0xF] = 1;
+					registers[(opcode & 0x0F00) >> 8] -= registers[(opcode & 0x00F0) >> 4];
 					break;
 				}
 				//8XY6
@@ -279,7 +283,12 @@ void chip8::emulateCycle()
 				//8XY7
 				case 0x0007:
 				{
-					halted = true;
+					if (registers[(opcode & 0x0F00) >> 8] > registers[(opcode & 0x00F0) >> 4])
+						registers[0xF] = 0; // Borrowed
+					else
+						registers[0xF] = 1; //Not Borrowed
+					registers[(opcode & 0x0F00) >> 8] = registers[(opcode & 0x00F0) >> 4] - registers[(opcode & 0x0F00) >> 8];
+
 					break;
 				}
 				//8XYE
@@ -427,7 +436,7 @@ void chip8::emulateCycle()
 				//FX18
 				case 0x0018:
 				{
-					halted = true;
+					soundTimer = (opcode & 0x0F00) >> 8;
 					break;
 				}
 

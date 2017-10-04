@@ -78,7 +78,7 @@ bool display::initialize()
 		"out vec4 FragColor;\n"
 		"void main()\n"
 		"{\n"
-		"   FragColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);\n"
+		"   FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
 		"}\n\0";
 
 	//COMPILE VERTEX SHADER
@@ -218,6 +218,9 @@ void display::drawGraphics(chip8 processor)
 			if (processor.graphics[(y * 64) + x] == 0)
 			{
 
+			}
+			else
+			{
 				//Offsets
 				float yOffset = 0.0625f;
 				float xOffset = 0.03125f;
@@ -279,7 +282,7 @@ void display::drawGraphics(chip8 processor)
 
 	//RENDER BACKGROUND COLOUR
 	//------------------------
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	//DRAW OUR TRIANGLE
@@ -293,17 +296,15 @@ void display::drawGraphics(chip8 processor)
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 	}
 
-	//glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-	//glDrawArrays(GL_TRIANGLES, 0, 3);
-
 	glfwSwapBuffers(window);
 
-	//
-	VAOa.clear();
-	//delete &VAOi;
+	//Iterate through VAO Vector
+	for (VAOi = VAOa.begin(); VAOi < VAOa.end(); VAOi++)
+	{
+		glDeleteVertexArrays(1, &*VAOi);
+	}
 
 	//Kill
-	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 }
 
