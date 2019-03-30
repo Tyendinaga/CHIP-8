@@ -3,9 +3,9 @@
 
 
 //External Shit
-#include <glad\glad.h>
-#include <GLFW\glfw3.h>
-#include <cpu\chip8.hpp>
+#include "glad.h"
+#include <GLFW/glfw3.h>
+#include "../cpu/chip8.hpp"
 #include <vector>
 
 class display {

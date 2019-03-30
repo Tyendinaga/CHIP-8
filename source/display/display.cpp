@@ -3,11 +3,11 @@
 #include <vector>
 
 //External Shit
-#include <glad\glad.h>
-#include <GLFW\glfw3.h>
+#include "glad.h"
+#include <GLFW/glfw3.h>
 
 //Custom Shit
-#include "display\display.hpp"
+#include "display.hpp"
 
 bool display::initialize()
 {

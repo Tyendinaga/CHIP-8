@@ -4,7 +4,7 @@
 #include <fstream>
 
 //Custom Shit
-#include "../../Include/cpu/chip8.hpp"
+#include "chip8.hpp"
 
 /*
 Memory Map
