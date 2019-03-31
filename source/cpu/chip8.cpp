@@ -24,10 +24,7 @@ void chip8::initialize()
 	halted = false;
 
 	// Clear Display
-	for (int i = 0; i < 2048; i++)
-	{
-		graphics[i] = 0;
-	}
+	clearDisplay();
 	
 	//Clear Stack
 	stackPosition = 0;
@@ -78,6 +75,13 @@ void chip8::initialize()
 
 	//Reset Timers
 
+}
+
+void chip8::clearDisplay() {
+	for (int i = 0; i < 2048; i++)
+	{
+		graphics[i] = 0;
+	}
 }
 
 void chip8::emulateCycle()

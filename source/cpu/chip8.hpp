@@ -6,6 +6,8 @@
 class chip8 {
 	private:
     
+		void clearDisplay();
+
 	public:
 		//Variables. Will Probably have to make private
 
