@@ -133,7 +133,8 @@ void chip8::emulateCycle()
 				//00E0 (Clear Screen)
 				case 0x0000: 
 				{
-					halted = true;
+					clearDisplay();
+					drawFlag = true;
 					break;
 				}
 
@@ -157,7 +158,6 @@ void chip8::emulateCycle()
 			}
 
 			break;
-
 		}
 
 
