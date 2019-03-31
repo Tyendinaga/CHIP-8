@@ -52,8 +52,6 @@ int main()
 		{
 			window.drawGraphics(processor);
 			processor.drawFlag = false;
-
-			//processor.debugRender();
 		}
 
 		//Do Something?

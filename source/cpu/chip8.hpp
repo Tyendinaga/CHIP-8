@@ -46,8 +46,6 @@ class chip8 {
 		void loadGame(std::string game);
 		void emulateCycle(); 
 		void setKeys();
-
-		void debugRender();
 };
 
 

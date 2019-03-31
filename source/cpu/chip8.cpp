@@ -527,27 +527,6 @@ void chip8::setKeys()
 {
     //do nothing
 }
-
-void chip8::debugRender()
-{
-	system("cls");
-
-	// draw
-	for (int y = 0; y < 32; ++y)
-	{
-		for (int x = 0; x < 64; ++x)
-		{
-				if (graphics[(y * 64) + x] == 0)
-					std::cout << "O";
-				else
-					std::cout << " ";
-			}
-		std::cout << std::endl;
-		}
-	std::cout << std::endl;
-	
-
-}
  
 void chip8::loadGame(std::string progName)
 {
