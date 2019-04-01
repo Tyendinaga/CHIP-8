@@ -370,10 +370,11 @@ void chip8::emulateCycle()
 			break;
 		}
 
-		//BNNN
+		//BNNN Jump to Address NNN + V0
 		case 0xB000:
 		{
-			halted = true;
+			programCounter = (opcode & 0x0FFF) + registers[0x0];
+			advanceProgram();
 			break;
 		}
 
