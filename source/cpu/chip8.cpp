@@ -193,7 +193,7 @@ void chip8::emulateCycle()
 			break;
 		}
 
-		//4XNN Jumps an extra instruction is Register X doesn't equal NN
+		//4XNN Jumps an extra instruction if Register X doesn't equal NN
 		case 0x4000:
 		{
 			if (registers[(opcode & 0x0F00) >> 8] != (opcode & 0x00FF))
@@ -205,10 +205,15 @@ void chip8::emulateCycle()
 			break;
 		}
 
-		//5XY0
+		//5XY0 Jumps an instruction if Register X is equal to Register Y
 		case 0x5000:
 		{
-			halted = true;
+			if (registers[(opcode & 0x0F00) >> 8] == registers[(opcode & 0x00F0) >> 4]
+			{
+				advanceProgram();
+			}
+
+			advanceProgram();
 			break;
 		}
 
