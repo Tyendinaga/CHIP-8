@@ -208,7 +208,7 @@ void chip8::emulateCycle()
 		//5XY0 Jumps an instruction if Register X is equal to Register Y
 		case 0x5000:
 		{
-			if (registers[(opcode & 0x0F00) >> 8] == registers[(opcode & 0x00F0) >> 4]
+			if (registers[(opcode & 0x0F00) >> 8] == registers[(opcode & 0x00F0) >> 4])
 			{
 				advanceProgram();
 			}
