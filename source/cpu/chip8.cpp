@@ -304,10 +304,13 @@ void chip8::emulateCycle()
 					advanceProgram();
 					break;
 				}
-				//8XY6
+				//8XY6 Store Value of Y Shifted Right One into X; Least Significant Bit Stored in VF. 
 				case 0x0006:
 				{
-					halted = true;
+					registers[0xF] = registers[(opcode & 0x00F0) >> 4] & 0x1;
+					registers[(opcode & 0x0F00) >> 8] = registers[(opcode & 0x00F0) >> 4] > 1;
+
+					advanceProgram();
 					break;
 				}
 				//8XY7
@@ -327,10 +330,13 @@ void chip8::emulateCycle()
 					advanceProgram();
 					break;
 				}
-				//8XYE
+				//8XYE Store Value of Y Shifted Left One into X; Least Significant Bit Stored in VF. 
 				case 0x000E:
 				{
-					halted = true;
+					registers[0xF] = registers[(opcode & 0x00F0) >> 4] >> 7;
+					registers[(opcode & 0x0F00) >> 8] = registers[(opcode & 0x00F0) >> 4] < 1;
+
+					advanceProgram();
 					break;
 				}
 
