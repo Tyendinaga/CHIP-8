@@ -217,6 +217,7 @@ void chip8::emulateCycle()
 		case 0x6000:
 		{
 			registers[(opcode & 0x0F00) >> 8] = (opcode & 0x00FF);
+			advanceProgram();
 			break;
 		}
 
