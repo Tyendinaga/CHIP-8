@@ -316,7 +316,6 @@ void chip8::emulateCycle()
 		//ANNN Sets Index to NNN 
 		case 0xA000:
 		{
-
 			index = (opcode & 0x0FFF);
 			break;
 		}
@@ -501,7 +500,7 @@ void chip8::emulateCycle()
 	//Increment memory position provided we are not halted.
 	if (!halted)
 	{
-		programCounter += 2;
+		//programCounter += 2;
 		std::cout << "Processed Code: 0x" << std::hex << opcode << std::endl;
 	}
 	else
