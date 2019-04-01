@@ -134,6 +134,7 @@ void chip8::emulateCycle()
 				case 0x0000: 
 				{
 					clearDisplay();
+					advanceProgram();
 					drawFlag = true;
 					break;
 				}
@@ -144,7 +145,7 @@ void chip8::emulateCycle()
 					//Return back to the previous stack position and set program counter to the stored address
 					stackPosition--;
 					programCounter = stack[stackPosition];
-
+					advanceProgram();
 					break;
 				}
 
@@ -165,7 +166,6 @@ void chip8::emulateCycle()
 		case 0x1000:
 		{
 			programCounter = (opcode & 0x0FFF);
-
 			break;
 		}
 
@@ -186,9 +186,10 @@ void chip8::emulateCycle()
 		{
 			if (registers[(opcode & 0x0F00) >> 8] == (opcode & 0x00FF))
 			{
-				programCounter += 2;
+				advanceProgram();
 			}
 
+			advanceProgram();
 			break;
 		}
 
@@ -197,9 +198,10 @@ void chip8::emulateCycle()
 		{
 			if (registers[(opcode & 0x0F00) >> 8] != (opcode & 0x00FF))
 			{
-				programCounter += 2;
+				advanceProgram();
 			}
 
+			advanceProgram();
 			break;
 		}
 
@@ -222,6 +224,7 @@ void chip8::emulateCycle()
 		case 0x7000:
 		{
 			registers[(opcode & 0x0F00) >> 8] += (opcode & 0x00FF);
+			advanceProgram();
 			break;
 		}
 
@@ -234,6 +237,7 @@ void chip8::emulateCycle()
 				case 0x0000:
 				{
 					registers[(opcode & 0x0F00) >> 8] = registers[(opcode & 0x0F00) >> 8];
+					advanceProgram();
 					break;
 				}
 
@@ -248,6 +252,7 @@ void chip8::emulateCycle()
 				case 0x0002:
 				{
 					registers[(opcode & 0x0F00) >> 8] = registers[(opcode & 0x0F00) >> 8] & registers[(opcode & 0x00F0) >> 4];
+					advanceProgram();
 					break;
 				}
 
@@ -261,21 +266,34 @@ void chip8::emulateCycle()
 				case 0x0004:
 				{
 					if (registers[(opcode & 0x00F0) >> 4] > (0xFF - registers[(opcode & 0x0F00) >> 8]))
+					{
 						registers[0xF] = 1; //carry
-					else
+					}
+					else 
+					{
 						registers[0xF] = 0;
+					}
+						
 					registers[(opcode & 0x0F00) >> 8] += registers[(opcode & 0x00F0) >> 4];
 
+					advanceProgram();
 					break;
 				}
 				//8XY5 X = X - Y;
 				case 0x0005:
 				{
 					if (registers[(opcode & 0x00F0) >> 4] > registers[(opcode & 0x0F00) >> 8])
+					{
 						registers[0xF] = 0; // Borrow
+					}
 					else
+					{
 						registers[0xF] = 1;
+					}
+						
 					registers[(opcode & 0x0F00) >> 8] -= registers[(opcode & 0x00F0) >> 4];
+
+					advanceProgram();
 					break;
 				}
 				//8XY6
@@ -287,12 +305,18 @@ void chip8::emulateCycle()
 				//8XY7
 				case 0x0007:
 				{
-					if (registers[(opcode & 0x0F00) >> 8] > registers[(opcode & 0x00F0) >> 4])
+					if (registers[(opcode & 0x0F00) >> 8] > registers[(opcode & 0x00F0) >> 4]) 
+					{
 						registers[0xF] = 0; // Borrowed
+					}
 					else
+					{
 						registers[0xF] = 1; //Not Borrowed
+					}
+						
 					registers[(opcode & 0x0F00) >> 8] = registers[(opcode & 0x00F0) >> 4] - registers[(opcode & 0x0F00) >> 8];
 
+					advanceProgram();
 					break;
 				}
 				//8XYE
@@ -331,6 +355,7 @@ void chip8::emulateCycle()
 		case 0xC000:
 		{
 			registers[(opcode & 0x0F00) >> 8] = rand() & (opcode & 0x00FF);
+			advanceProgram();
 			break;
 		}
 
@@ -354,10 +379,8 @@ void chip8::emulateCycle()
 				//This is where we specify how wide the sprite is. 
 				for (int xline = 0; xline < 8; xline++)
 				{
-
 					if ((pixel & (0x80 >> xline)) != 0)
 					{
-
 						//Not a hundred percent sure how exactly this math works
 						if (graphics[(x + xline + ((y + yline) * 64))] == 1)
 						{
@@ -366,17 +389,16 @@ void chip8::emulateCycle()
 
 						graphics[x + xline + ((y + yline) * 64)] ^= 1;
 					}
-
 				}
-
 			}
 
 			drawFlag = true;
+			advanceProgram();
 			break;
 		}
 
 
-		//CXNN
+		//EXNN
 		case 0xE000:
 		{
 			switch (opcode & 0x00ff)
@@ -387,9 +409,10 @@ void chip8::emulateCycle()
 
 					if (key[registers[(opcode & 0x0F00 >> 8)]] != 0)
 					{
-						programCounter += 2;
+						advanceProgram();
 					}
 
+					advanceProgram();
 					break;
 				}
 
@@ -399,10 +422,18 @@ void chip8::emulateCycle()
 
 					if (key[registers[(opcode & 0x0F00 >> 8)]] == 0)
 					{
-						programCounter += 2;
+						advanceProgram();
 					}
 
+					advanceProgram();
 					break;
+				}
+
+				//Shits fucked up.
+				default:
+				{
+					std::cout << "Unknown Opcode: 0x" << std::hex << opcode << std::endl;
+					halted = true;
 				}
 			}
 
@@ -418,6 +449,7 @@ void chip8::emulateCycle()
 				case 0x0007:
 				{
 					registers[(opcode & 0x0F00) >> 8] = delayTimer;
+					advanceProgram();
 					break;
 				}
 
@@ -432,7 +464,7 @@ void chip8::emulateCycle()
 				case 0x0015:
 				{
 					delayTimer = (opcode & 0x0F00) >> 8;
-
+					advanceProgram();
 					break;
 				}
 
@@ -440,6 +472,7 @@ void chip8::emulateCycle()
 				case 0x0018:
 				{
 					soundTimer = (opcode & 0x0F00) >> 8;
+					advanceProgram();
 					break;
 				}
 
@@ -454,7 +487,7 @@ void chip8::emulateCycle()
 				case 0x0029:
 				{
 					index = registers[(opcode & 0x0F00) >> 8];
-
+					advanceProgram();
 					break;
 				}
 
@@ -464,6 +497,7 @@ void chip8::emulateCycle()
 					memory[index] = registers[(opcode & 0x0F00) >> 8] / 100;
 					memory[index + 1] = (registers[(opcode & 0x0F00) >> 8] / 10 % 10);
 					memory[index + 2] = (registers[(opcode & 0x0F00) >> 8] % 100) % 10;
+					advanceProgram();
 					break;
 				}
 
@@ -483,6 +517,7 @@ void chip8::emulateCycle()
 						registers[i] = memory[index + i];
 					}
 
+					advanceProgram();
 					break;
 				}
 			}
