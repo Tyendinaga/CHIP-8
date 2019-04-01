@@ -342,6 +342,7 @@ void chip8::emulateCycle()
 		case 0xA000:
 		{
 			index = (opcode & 0x0FFF);
+			advanceProgram();
 			break;
 		}
 
