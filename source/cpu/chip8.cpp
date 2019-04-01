@@ -548,14 +548,22 @@ void chip8::emulateCycle()
 					break;
 				}
 
-				//FX55
+				//FX55 Store Registers V0 Through VX from Index Onwards
 				case 0x0055:
 				{
-					halted = true;
+					
+					for (int i = 0; i < ((opcode & 0x0F00) >> 8); i++) 
+					{
+						memory[index + i] = registers[i];
+					}
+
+					index = index + ((opcode & 0x0F00) >> 8) + 1;
+
+					advanceProgram();
 					break;
 				}
 
-				//FX65
+				//FX65 Load Registers V0 Through VX from Index Onwards
 				case 0x0065:
 				{
 
@@ -563,6 +571,8 @@ void chip8::emulateCycle()
 					{
 						registers[i] = memory[index + i];
 					}
+
+					index = index + ((opcode & 0x0F00) >> 8) + 1;
 
 					advanceProgram();
 					break;
