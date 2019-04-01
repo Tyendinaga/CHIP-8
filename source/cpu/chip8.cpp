@@ -37,7 +37,7 @@ void chip8::initialize()
 
 
 	// Clear Memory
-	for (int i = 0; i < 2048; i++)
+	for (int i = 0; i < 4096; i++)
 	{
 		memory[i] = 0;
 	}
