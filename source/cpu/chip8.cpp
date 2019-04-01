@@ -491,10 +491,19 @@ void chip8::emulateCycle()
 					break;
 				}
 
-				//FX0A
+				//FX0A Wait for a Key press
 				case 0x000A:
 				{
-					halted = true;
+					for(int i = 0; i < 16; i++)
+					{
+						if (key[i != 0])
+						{
+							advanceProgram();
+							registers[(opcode & 0x0F00) >> 8] = 1;
+							break;
+						}
+					} 
+
 					break;
 				}
 
