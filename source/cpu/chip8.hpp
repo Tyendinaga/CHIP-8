@@ -7,6 +7,7 @@ class chip8 {
 	private:
     
 		void clearDisplay();
+		void advanceProgram();
 
 	public:
 		//Variables. Will Probably have to make private
@@ -23,7 +24,7 @@ class chip8 {
 		//Chip 8's 16 Registers
 		unsigned char registers[16];
 
-		//Index Reghister & Program Counter
+		//Index Register & Program Counter
 		unsigned short index;
 		unsigned short programCounter;
 

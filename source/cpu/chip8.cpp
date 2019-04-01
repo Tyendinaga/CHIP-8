@@ -497,15 +497,15 @@ void chip8::emulateCycle()
 		}
 	}
 
-	//Increment memory position provided we are not halted.
+	
 	if (!halted)
 	{
-		//programCounter += 2;
 		std::cout << "Processed Code: 0x" << std::hex << opcode << std::endl;
 	}
 	else
 	{
 		std::cout << "Unknown Opcode: 0x" << std::hex << opcode << std::endl;
+		return;
 	}
 
 	//Update Timers
@@ -531,6 +531,11 @@ void chip8::setKeys()
     //do nothing
 }
  
+void chip8::advanceProgram() 
+{
+	programCounter += 2;
+}
+
 void chip8::loadGame(std::string progName)
 {
 	std::cout << "LOADING ROM: " << progName << std::endl;
