@@ -599,5 +599,7 @@ void chip8::loadGame(std::string progName)
 			memory[i + 512] = programBuffer[i];
 		}
 	}
+
+	rom.close();
 }
 
