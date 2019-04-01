@@ -247,15 +247,15 @@ void chip8::emulateCycle()
 					break;
 				}
 
-				//8XY1 Set X to X |= Y
+				//8XY1 Set X to X | Y
 				case 0x0001:
 				{
-					registers[(opcode & 0x0F00) > 8] |= registers[(opcode & 0x0F00) >> 8];
+					registers[(opcode & 0x0F00) > 8] = registers[(opcode & 0x0F00) >> 8] | registers[(opcode & 0x0F00) >> 8];
 					advanceProgram();
 					break;
 				}
 
-				//8XY2 Set X to X AND Y
+				//8XY2 Set X to X & Y
 				case 0x0002:
 				{
 					registers[(opcode & 0x0F00) >> 8] = registers[(opcode & 0x0F00) >> 8] & registers[(opcode & 0x00F0) >> 4];
