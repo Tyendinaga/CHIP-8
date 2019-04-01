@@ -17,7 +17,7 @@ Memory Map
 void chip8::initialize()
 {
 	programCounter = 0x200;
-	opcode = 1;
+	opcode = 0;
 	index = 0;
 
 	//Debug Flag
