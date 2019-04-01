@@ -538,12 +538,12 @@ void chip8::emulateCycle()
 					break;
 				}
 
-				//FX33
+				//FX33 Store Decimal Representation of VX in I, I+1, I+2
 				case 0x0033:
 				{
 					memory[index] = registers[(opcode & 0x0F00) >> 8] / 100;
-					memory[index + 1] = (registers[(opcode & 0x0F00) >> 8] / 10 % 10);
-					memory[index + 2] = (registers[(opcode & 0x0F00) >> 8] % 100) % 10;
+					memory[index + 1] = registers[(opcode & 0x0F00) >> 8] / 10 % 10;
+					memory[index + 2] = registers[(opcode & 0x0F00) >> 8] % 10;
 					advanceProgram();
 					break;
 				}
