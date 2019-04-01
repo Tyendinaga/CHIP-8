@@ -28,7 +28,7 @@ void chip8::initialize()
 	
 	//Clear Stack
 	stackPosition = 0;
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 16; i++)
 	{
 		stack[i] = 0;
 	}
