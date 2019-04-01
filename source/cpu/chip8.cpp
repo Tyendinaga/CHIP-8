@@ -39,6 +39,12 @@ void chip8::initialize()
 		registers[i] = 0;
 	}
 
+	// Clear the Keywhatsits.
+	for (int i = 0; i < 16; i++)
+	{
+		key[i] = 0;
+	}
+
 	// Clear Memory
 	for (int i = 0; i < 4096; i++)
 	{
