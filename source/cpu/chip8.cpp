@@ -34,7 +34,10 @@ void chip8::initialize()
 	}
 
 	// Clear Registers V0 - VF
-
+	for (int i = 0; i < 16; i++)
+	{
+		registers[i] = 0;
+	}
 
 	// Clear Memory
 	for (int i = 0; i < 4096; i++)
