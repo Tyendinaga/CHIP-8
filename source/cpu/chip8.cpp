@@ -555,7 +555,7 @@ void chip8::emulateCycle()
 	{
 		if (soundTimer == 1)
 		{
-			//Play Sound
+			//TODO: Play Sound
 		}
 
 		--soundTimer;
