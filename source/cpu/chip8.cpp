@@ -340,6 +340,12 @@ void chip8::emulateCycle()
 					break;
 				}
 
+				//Shits fucked up.
+				default:
+				{
+					std::cout << "Unknown Opcode: 0x" << std::hex << opcode << std::endl;
+					halted = true;
+				}
 			}
 			break;
 		}
