@@ -560,7 +560,6 @@ void chip8::emulateCycle()
 
 		--soundTimer;
 	}
-
 }
 
 void chip8::setKeys()
@@ -590,7 +589,7 @@ void chip8::loadGame(std::string progName)
 	{
 		//ROMS for the chip 8 are loaded into a space of memory that ranges from about 
 		//0x200 to 0xFFF, This gives us a total of 3583 Bytes.
-		//I don't know how well it will work but I'll just grab the whole from file.
+		//I don't know how well it will work but I'll just grab the whole amount from file.
 		char programBuffer[3583];
 		rom.read(programBuffer, sizeof programBuffer);
 
@@ -599,7 +598,6 @@ void chip8::loadGame(std::string progName)
 		{
 			memory[i + 512] = programBuffer[i];
 		}
-
 	}
 }
 
