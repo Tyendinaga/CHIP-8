@@ -515,7 +515,7 @@ void chip8::emulateCycle()
 					break;
 				}
 
-				//FX18
+				//FX18 Set Sound Timer to X
 				case 0x0018:
 				{
 					soundTimer = (opcode & 0x0F00) >> 8;
