@@ -350,10 +350,15 @@ void chip8::emulateCycle()
 			break;
 		}
 
-		//9XY0
+		//9XY0 Jumps an extra instruction if Register X doesn't equal Register Y
 		case 0x9000:
 		{
-			halted = true;
+			if (registers[(opcode & 0x0F00) >> 8] != registers[(opcode & 0x00F0) >> 4]) 
+			{
+				advanceProgram();
+			}
+
+			advanceProgram();
 			break;
 		}
 
