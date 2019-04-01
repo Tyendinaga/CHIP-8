@@ -83,6 +83,8 @@ void chip8::initialize()
 	}
 
 	//Reset Timers
+	delayTimer = 0;
+	soundTimer = 0;
 
 }
 
