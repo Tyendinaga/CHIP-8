@@ -523,17 +523,28 @@ void chip8::emulateCycle()
 					break;
 				}
 
-				//FX1E
+				//FX1E Add VX to Index
 				case 0x001E:
 				{
-					halted = true;
+					if (registers[(opcode & 0x0F00) >> 8] + index > 0xFFF)
+					{
+						registers[0xF] = 1; //carry
+					}
+					else 
+					{
+						registers[0xF] = 0;
+					}
+						
+					index += registers[(opcode & 0x0F00) >> 8];
+
+					advanceProgram();
 					break;
 				}
 
-				//FX29
+				//FX29 Sets index to location of Sprite, Each sprite is 5 Bytes
 				case 0x0029:
 				{
-					index = registers[(opcode & 0x0F00) >> 8];
+					index = registers[(opcode & 0x0F00) >> 8] * 0x5;
 					advanceProgram();
 					break;
 				}
