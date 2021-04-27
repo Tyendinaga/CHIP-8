@@ -96,6 +96,8 @@ bool display::initialize()
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << compileLog << std::endl;
 	}
 
+
+
 	//COMPILE FRAGMENT SHADER
 	//-----------------------
 	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
