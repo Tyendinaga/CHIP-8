@@ -51,7 +51,6 @@ int main()
 			processor.emulateCycle();
 		}
 
-
 		//drawGraphics(window);
 		if (processor.drawFlag)
 		{

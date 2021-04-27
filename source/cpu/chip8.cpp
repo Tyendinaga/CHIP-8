@@ -601,14 +601,10 @@ void chip8::emulateCycle()
 	}
 
 	
-	if (!halted)
+	if (halted)
 	{
-		std::cout << "Processed Code: 0x" << std::hex << opcode << std::endl;
-	}
-	else
-	{
-		std::cout << "Unknown Opcode: 0x" << std::hex << opcode << std::endl;
-		return;
+        std::cout << "Halted on Opcode: 0x" << std::hex << opcode << std::endl;
+        return;
 	}
 
 	//Update Timers
@@ -666,7 +662,6 @@ bool chip8::loadGame(const std::string& progName)
 		for (int i = 0; i < sizeof programBuffer; i++)
 		{
 			memory[i + 512] = programBuffer[i];
-			std::cout << "LOADING: " << i << "/" << (sizeof programBuffer);
 		}
 	}
 
