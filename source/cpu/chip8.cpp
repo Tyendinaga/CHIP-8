@@ -108,7 +108,7 @@ void chip8::emulateCycle()
 
 		0x370C
 
-		We can't make a switch with every possible op code built in so we need to filter based on their indvidual characteristics. 
+		We can't make a switch with every possible op code built in so we need to filter based on their individual characteristics.
 
 		if you 0x370C & 0xF000 you get a result of 0x3000. This allows us to break down the opcodes to a level where we can identify
 		The parts that identify specific operations the code itself is meant to perform, after which we can perform the actual logic with them. 
