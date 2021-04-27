@@ -32,7 +32,12 @@ int main()
 	window.initialize();
 
 	//We're just going to hard code pong for now
-	processor.loadGame("PONG");
+	if (!processor.loadGame("PONG"))
+    {
+        glfwTerminate();
+        std::cout << "TERMINATING EMULATOR" << std::endl;
+        return EXIT_FAILURE;
+    }
 
 	//emulation loop
 	

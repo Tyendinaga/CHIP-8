@@ -46,7 +46,7 @@ class chip8 {
 		
 		//Functions
 		void initialize();
-		void loadGame(std::string game);
+		bool loadGame(const std::string& game);
 		void emulateCycle(); 
 		void setKeys();
 };

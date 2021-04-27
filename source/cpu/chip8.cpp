@@ -638,7 +638,7 @@ void chip8::advanceProgram()
 	programCounter += 2;
 }
 
-void chip8::loadGame(std::string progName)
+bool chip8::loadGame(const std::string& progName)
 {
 	std::cout << "LOADING ROM: " << progName << std::endl;
 
@@ -650,6 +650,9 @@ void chip8::loadGame(std::string progName)
 	if (!rom)
 	{
 		std::cout << "EMULATION ERROR: " << progName << " NOT FOUND" << std::endl;
+
+		// Failed to load ROM
+		return false;
 	}
 	else
 	{
@@ -663,9 +666,13 @@ void chip8::loadGame(std::string progName)
 		for (int i = 0; i < sizeof programBuffer; i++)
 		{
 			memory[i + 512] = programBuffer[i];
+			std::cout << "LOADING: " << i << "/" << (sizeof programBuffer);
 		}
 	}
 
 	rom.close();
+
+	// ROM Loaded Successfully
+	return true;
 }
 
