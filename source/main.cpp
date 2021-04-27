@@ -1,4 +1,4 @@
-//Standard Windows Crap
+//Standard Crap
 #include <cstdlib>
 #include <thread>
 #include <chrono>
