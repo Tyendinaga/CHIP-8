@@ -3,7 +3,7 @@
 
 # Ignore the CMAKE Build Directory
 build/
-
+cmake-build-debug/
 
 ###### OLD SHIT BELOW HERE #######
 
