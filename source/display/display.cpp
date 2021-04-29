@@ -12,12 +12,10 @@
 bool display::initialize()
 {
 	
-	//WW      WW IIIII NN   NN DDDDD    OOOOO  WW      WW 
-	//WW      WW  III  NNN  NN DD  DD  OO   OO WW      WW 
-	//WW   W  WW  III  NN N NN DD   DD OO   OO WW   W  WW 
-	// WW WWW WW  III  NN  NNN DD   DD OO   OO  WW WWW WW 
-	//  WW   WW  IIIII NN   NN DDDDDD   OOOO0    WW   WW  
 
+    ///////////////////
+    // CREATE WINDOW //
+    ///////////////////
 	std::cout << "GLFW Initializing" << std::endl;
 
 	/* Initialize the library */
@@ -32,8 +30,8 @@ bool display::initialize()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	//Creater a 640 by 320 Window to play the game in. 
-	window = glfwCreateWindow(640, 320, "EmuC80", NULL, NULL);
+	//Create a 640 by 320 Window to play the game in.
+	window = glfwCreateWindow(640, 320, "EmuC80", nullptr, nullptr);
 	if (!window)
 	{
 		std::cout << "GLFW Window Failure" << std::endl;
@@ -45,7 +43,7 @@ bool display::initialize()
 	glfwMakeContextCurrent(window);
 
 	//Set Resize Function
-	glfwSetFramebufferSizeCallback(window, this->framebufferSizeCallback);
+	glfwSetFramebufferSizeCallback(window, display::framebufferSizeCallback);
 
 	//Initialize GLAD
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -54,11 +52,9 @@ bool display::initialize()
 		return false;
 	}
 
-	// SSSSS  HH   HH   AAA   DDDDD   EEEEEEE RRRRRR   SSSSS  
-	//SS      HH   HH  AAAAA  DD  DD  EE      RR   RR SS      
-	// SSSSS  HHHHHHH AA   AA DD   DD EEEEE   RRRRRR   SSSSS  
-	//     SS HH   HH AAAAAAA DD   DD EE      RR  RR       SS 
-	// SSSSS  HH   HH AA   AA DDDDDD  EEEEEEE RR   RR  SSSSS  
+    ////////////////////////
+    // SHADER COMPILATION //
+    ////////////////////////
 
 	//SHADER COMPILATION VARIABLES
 	//----------------------------
@@ -84,7 +80,7 @@ bool display::initialize()
 	//COMPILE VERTEX SHADER
 	//---------------------
 	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
 	glCompileShader(vertexShader);
 
 	//CHECK SHADER COMPILATION
@@ -92,16 +88,14 @@ bool display::initialize()
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &compiled);
 	if (!compiled)
 	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, compileLog);
+		glGetShaderInfoLog(vertexShader, 512, nullptr, compileLog);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << compileLog << std::endl;
 	}
-
-
 
 	//COMPILE FRAGMENT SHADER
 	//-----------------------
 	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
 	glCompileShader(fragmentShader);
 
 	//CHECK SHADER COMPILATION
@@ -109,7 +103,7 @@ bool display::initialize()
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &compiled);
 	if (!compiled)
 	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, compileLog);
+		glGetShaderInfoLog(vertexShader, 512, nullptr, compileLog);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << compileLog << std::endl;
 	}
 
@@ -125,7 +119,7 @@ bool display::initialize()
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &compiled);
 	if (!compiled) 
 	{
-		glGetProgramInfoLog(shaderProgram, 512, NULL, compileLog);
+		glGetProgramInfoLog(shaderProgram, 512, nullptr, compileLog);
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << compileLog << std::endl;
 	}
 
@@ -134,79 +128,12 @@ bool display::initialize()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	//VV     VV EEEEEEE RRRRRR  TTTTTTT EEEEEEE XX    XX        DDDDD     AAA   TTTTTTT   AAA   
-	//VV     VV EE      RR   RR   TTT   EE       XX  XX         DD  DD   AAAAA    TTT    AAAAA  
-	// VV   VV  EEEEE   RRRRRR    TTT   EEEEE     XXXX   _____  DD   DD AA   AA   TTT   AA   AA 
-	//  VV VV   EE      RR  RR    TTT   EE       XX  XX         DD   DD AAAAAAA   TTT   AAAAAAA 
-	//   VVV    EEEEEEE RR   RR   TTT   EEEEEEE XX    XX        DDDDDD  AA   AA   TTT   AA   AA 
-
-
-	/*
-	//MAKE A TRIANGLE
-	//---------------
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f, // left  
-		0.5f, -0.5f, 0.0f, // right 
-		0.0f,  0.5f, 0.0f  // top   
-	};
-
-	float vertices2[] = {
-		-0.7f, -0.7f, 0.0f, // left  
-		0.3f, -0.3f, 0.0f, // right 
-		0.0f,  0.7f, 0.0f  // top   
-	};
-
-	//GENERATE ARRAYS AND BUFFERS
-	//---------------------------
-	glGenVertexArrays(1, &VAO);
-	glGenVertexArrays(1, &VAO2);
-	glGenBuffers(1, &VBO);
-
-	//BINDING
-	//-------
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	//BIND VBO
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	//Unbind VAO
-	glBindVertexArray(0);
-
-	//Unbind Buffer
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	*/
-	/* Prior Code
-	//GENERATE ARRAYS AND BUFFERS
-	//---------------------------
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
-	//BINDING
-	//-------
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
-
-	//BIND VBO
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	//Unbind Buffer
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	//Unbind VAO
-	glBindVertexArray(0);*/
-
 	return true;
 }
 
 //Draw Game Shit
 void display::drawGraphics(chip8 processor)
 {
-
 	//VAO Storage
 	std::vector<unsigned int> VAOa;
 	std::vector<unsigned int>::iterator VAOi;
@@ -249,38 +176,7 @@ void display::drawGraphics(chip8 processor)
 				VAOa.push_back(generate(vertices2));
 			}
 		}
-		std::cout << std::endl;
 	}
-	
-
-	//MAKE A TRIANGLE
-	//---------------
-	/*
-	std::vector<float> vertices = {
-		-0.7f, -0.7f, 0.0f, // left  
-		0.3f, -0.3f, 0.0f, // right 
-		0.0f,  0.7f, 0.0f  // top   
-	};*/
-
-	/*
-	//Height Y 0.0625
-	//Width X 0.03125
-
-	std::vector<float> vertices1= {
-		-1.0f, 0.9375f, 0.0f, // Bottom Left Corner
-		-0.96875f, 1.0f, 0.0f, // Top right 
-		-1.0f,  1.0f, 0.0f  // Top Left Corner
-	};
-
-	std::vector<float> vertices2 = {
-		-1.0f, 0.9375f, 0.0f, // Bottom Left Corner
-		-0.96875f, 1.0f, 0.0f,  // Top right 
-		-0.96875f, 0.9375f, 0.0f  // Bottom Right Corner
-	};
-
-
-	VAOa.push_back(generate(vertices1));
-	VAOa.push_back(generate(vertices2));*/
 
 	//RENDER BACKGROUND COLOUR
 	//------------------------
@@ -307,6 +203,7 @@ void display::drawGraphics(chip8 processor)
 	}
 
 	//Kill
+	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 }
 
@@ -328,7 +225,7 @@ unsigned int display::generate(std::vector<float> vertices)
 	glBufferData(GL_ARRAY_BUFFER, size, &vertices[0], GL_STATIC_DRAW);
 
 	//BIND VBO
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
 
 	//Do not Work with Vertex Array
