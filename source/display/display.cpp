@@ -29,6 +29,9 @@ bool display::initialize()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    // Don't resize the window
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
 	//Create a 640 by 320 Window to play the game in.
 	window = glfwCreateWindow(640, 320, "EmuC80", nullptr, nullptr);
 	if (!window)
