@@ -40,10 +40,9 @@ int main()
     }
 
 	//emulation loop
-	
 	while (!window.shouldClose())
 	{
-		//Slowing down the cycle rate a bit. 
+		// Sleep for 16 Milliseconds between cycles
 		std::this_thread::sleep_for(std::chrono::milliseconds(16));
 
 		if (!processor.halted)
