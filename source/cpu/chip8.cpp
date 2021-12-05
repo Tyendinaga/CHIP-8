@@ -5,6 +5,7 @@
 
 //Custom Shit
 #include "chip8.hpp"
+#include "../audio/audio.hpp"
 
 /*
 Memory Map
@@ -518,6 +519,7 @@ void chip8::emulateCycle()
 				//FX18 Set Sound Timer to X
 				case 0x0018:
 				{
+                    std::cout << "Timer Set: " << ((opcode & 0x0F00) >> 8) << std::endl;
 					soundTimer = (opcode & 0x0F00) >> 8;
 					advanceProgram();
 					break;
@@ -615,11 +617,7 @@ void chip8::emulateCycle()
 
 	if (soundTimer > 0)
 	{
-		if (soundTimer == 1)
-		{
-			//TODO: Play Sound
-		}
-
+        testAudio();
 		--soundTimer;
 	}
 }

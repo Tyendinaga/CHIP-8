@@ -11,6 +11,7 @@
 //Custom Shit
 #include "cpu/chip8.hpp"
 #include "display/display.hpp"
+#include "audio/audio.hpp"
 
 
 void setupInput()
@@ -20,6 +21,8 @@ void setupInput()
 
 int main()
 {
+    //testAudio();
+
 	//Cute little baby processor
 	chip8 processor;
 	display window;
