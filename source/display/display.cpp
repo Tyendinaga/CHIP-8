@@ -11,7 +11,6 @@
 
 bool display::initialize()
 {
-	
 
     ///////////////////
     // CREATE WINDOW //
@@ -120,7 +119,7 @@ bool display::initialize()
 	if (!compiled) 
 	{
 		glGetProgramInfoLog(shaderProgram, 512, nullptr, compileLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << compileLog << std::endl;
+		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED" << std::endl << compileLog << std::endl;
 	}
 
 	//CLEANUP SHADER ARTIFACTS
