@@ -19,9 +19,20 @@ typedef struct
 }
 paTestData;
 
-class audio
+class Buzzer
 {
 
+public:
+
+    // Constructor
+    Buzzer();
+
+    // Destructor
+    ~Buzzer();
+
+    //
+    static int GetSampleRate();
+    static int GetBufferSize();
 };
 
 

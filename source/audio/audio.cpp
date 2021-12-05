@@ -73,9 +73,9 @@ void testAudio()
             &stream,
             NULL, /* no input */
             &outputParameters,
-            SAMPLE_RATE,
-            FRAMES_PER_BUFFER,
-            paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+            Buzzer::GetSampleRate(),
+            Buzzer::GetBufferSize(),
+            paClipOff,
             patestCallback,
             &data );
     if( err != paNoError ) goto error;
@@ -106,4 +106,44 @@ void testAudio()
     //fprintf( stderr, "Error number: %d\n", err );
     //fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
     //return err;
+}
+
+/**
+ * Constructor
+ *
+ * Initialize Audio Nonsense
+ */
+Buzzer::Buzzer()
+{
+
+}
+
+/**
+ * Destructor
+ *
+ * Clean up any necessary resources
+ */
+Buzzer::~Buzzer()
+{
+    Pa_Terminate();
+}
+
+/**
+ * Get Sample Rate
+ *
+ * Defaulting to 44100hz.
+ */
+int Buzzer::GetSampleRate()
+{
+    return 44100;
+}
+
+/**
+ * Get Buffer Size
+ *
+ * Default to 128
+ */
+int Buzzer::GetBufferSize()
+{
+    return 128;
 }
