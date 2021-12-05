@@ -24,12 +24,16 @@ private:
 
 public:
 
+    //
+    GLFWwindow* GetWindow();
+
 	//Functions
 	bool initialize();
 	void drawGraphics(chip8 processor);
 	bool shouldClose();
 	static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
-	
+
+    // Vars
 	unsigned int generate(std::vector<float> vertices);
 	
 };

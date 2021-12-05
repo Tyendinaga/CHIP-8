@@ -2,6 +2,7 @@
 #define CHIP8_HPP
 
 #include <string>
+#include <GLFW/glfw3.h>
 
 class chip8 {
 	private:
@@ -47,8 +48,7 @@ class chip8 {
 		//Functions
 		void initialize();
 		bool loadGame(const std::string& game);
-		void emulateCycle(); 
-		void setKeys();
+		void emulateCycle();
 };
 
 

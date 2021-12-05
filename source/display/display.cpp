@@ -248,4 +248,9 @@ void display::framebufferSizeCallback(GLFWwindow * window, int width, int height
 	glViewport(0, 0, width, height);
 }
 
+GLFWwindow* display::GetWindow()
+{
+    return window;
+}
+
 

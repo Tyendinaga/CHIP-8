@@ -11,12 +11,10 @@
 //Custom Shit
 #include "cpu/chip8.hpp"
 #include "display/display.hpp"
-#include "audio/audio.hpp"
 
-
-void setupInput()
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode, void *parameter)
 {
-
+    std::cout << "Key Callback" << std::endl;
 }
 
 int main()
@@ -27,12 +25,11 @@ int main()
 	chip8 processor;
 	display window;
 
-	//Setup Input Keys
-	setupInput();
-
 	//Initialize Shit
 	processor.initialize();
 	window.initialize();
+
+    glfwSetKeyCallback(window.GetWindow(), reinterpret_cast<GLFWkeyfun>(key_callback));
 
 	//We're just going to hard code pong for now
 	if (!processor.loadGame("PONG.C8"))
@@ -60,9 +57,6 @@ int main()
 			window.drawGraphics(processor);
 			processor.drawFlag = false;
 		}
-
-		//Do Something?
-		processor.setKeys();
 
 		//Base GLFW Stuff to keep the window happy till I get shit working. 
 		glfwPollEvents();

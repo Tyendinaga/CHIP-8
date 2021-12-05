@@ -622,11 +622,6 @@ void chip8::emulateCycle()
 	}
 }
 
-void chip8::setKeys()
-{
-    //do nothing
-}
- 
 void chip8::advanceProgram() 
 {
 	programCounter += 2;
