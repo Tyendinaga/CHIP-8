@@ -1,10 +1,11 @@
-//Standard Shit
+#include "chip8.hpp"
+
+// Standard Libs
 #include <string>
 #include <iostream>
 #include <fstream>
 
-//Custom Shit
-#include "chip8.hpp"
+// Internal Stuff
 #include "../audio/audio.hpp"
 
 /*
@@ -14,6 +15,16 @@ Memory Map
 0x050-0x0A0 - Used for the built in 4x5 pixel font set (0-F)
 0x200-0xFFF - Program ROM and work RAM
 */
+
+chip8::chip8()
+{
+    std::cout << "Initializing CPU" << std::endl;
+}
+
+chip8::~chip8()
+{
+    std::cout << "Killing CPU" << std::endl;
+}
 
 void chip8::initialize()
 {

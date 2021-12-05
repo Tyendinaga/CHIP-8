@@ -29,7 +29,7 @@ public:
 
 	//Functions
 	bool initialize();
-	void drawGraphics(chip8 processor);
+	void drawGraphics(chip8* processor);
 	bool shouldClose();
 	static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 

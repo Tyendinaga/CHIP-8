@@ -1,7 +1,11 @@
 #include "audio.hpp"
 
+// Standard Libs
+#include <iostream>
 #include <stdio.h>
 #include <math.h>
+
+// External Libs
 #include <portaudio.h>
 
 /* This routine will be called by the PortAudio engine when audio is needed.
@@ -115,7 +119,9 @@ void testAudio()
  */
 Buzzer::Buzzer()
 {
-
+    std::cout << "Initializing Buzzer" << std::endl;
+    std::cout << "Sample Rate: " << GetSampleRate() << "hz" << std::endl;
+    std::cout << "Buffer Size: " << GetBufferSize() << std::endl;
 }
 
 /**
@@ -125,7 +131,8 @@ Buzzer::Buzzer()
  */
 Buzzer::~Buzzer()
 {
-    Pa_Terminate();
+    std::cout << "Killing Buzzer" << std::endl;
+    //Pa_Terminate();
 }
 
 /**

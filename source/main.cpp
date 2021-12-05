@@ -3,6 +3,7 @@
 #include <thread>
 #include <chrono>
 #include <iostream>
+#include <memory>
 
 //External Shit
 #include "display/glad.h"
@@ -22,17 +23,20 @@ int main()
     //testAudio();
 
 	//Cute little baby processor
-	chip8 processor;
+
+    std::unique_ptr<chip8> processor(new chip8());
+
+	//chip8 processor;
 	display window;
 
 	//Initialize Shit
-	processor.initialize();
+	processor->initialize();
 	window.initialize();
 
     glfwSetKeyCallback(window.GetWindow(), reinterpret_cast<GLFWkeyfun>(key_callback));
 
 	//We're just going to hard code pong for now
-	if (!processor.loadGame("PONG.C8"))
+	if (!processor->loadGame("PONG.C8"))
     {
         glfwTerminate();
         std::cout << "TERMINATING EMULATOR" << std::endl;
@@ -46,16 +50,16 @@ int main()
 		std::this_thread::sleep_for(std::chrono::milliseconds(16));
 
         //
-		if (!processor.halted)
+		if (!processor->halted)
 		{
-			processor.emulateCycle();
+			processor->emulateCycle();
 		}
 
         //
-		if (processor.drawFlag)
+		if (processor->drawFlag)
 		{
-			window.drawGraphics(processor);
-			processor.drawFlag = false;
+			window.drawGraphics(processor.get());
+			processor->drawFlag = false;
 		}
 
 		//Base GLFW Stuff to keep the window happy till I get shit working. 

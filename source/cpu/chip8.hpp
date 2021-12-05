@@ -1,8 +1,13 @@
-#ifndef CHIP8_HPP
-#define CHIP8_HPP
+#pragma once
 
+// Standard Libs
 #include <string>
+
+// External Libs
 #include <GLFW/glfw3.h>
+
+// Custom Stuff
+#include "../audio/audio.hpp"
 
 class chip8 {
 	private:
@@ -11,8 +16,10 @@ class chip8 {
 		void advanceProgram();
 
 	public:
-		//Variables. Will Probably have to make private
 
+        chip8();
+
+        ~chip8();
 
 		bool halted; //Debug Use Only
 
@@ -44,13 +51,12 @@ class chip8 {
 		unsigned char key[16];
 
 		bool drawFlag; 
-		
+
+        // Buzzer Hardware
+        Buzzer sound;
+
 		//Functions
 		void initialize();
 		bool loadGame(const std::string& game);
 		void emulateCycle();
 };
-
-
-#endif /* CHIP8_HPP */
-

@@ -134,7 +134,7 @@ bool display::initialize()
 }
 
 //Draw Game Shit
-void display::drawGraphics(chip8 processor)
+void display::drawGraphics(chip8* processor)
 {
 	//VAO Storage
 	std::vector<unsigned int> VAOa;
@@ -146,7 +146,7 @@ void display::drawGraphics(chip8 processor)
 		//Iterate Through Columns
 		for (int x = 0; x < 64; ++x)
 		{
-			if (processor.graphics[(y * 64) + x] == 0)
+			if (processor->graphics[(y * 64) + x] == 0)
 			{
 
 			}
