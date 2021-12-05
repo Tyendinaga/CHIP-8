@@ -1,12 +1,14 @@
 set(SOURCES main.cpp 
             cpu/chip8.cpp
             display/display.cpp
-            display/glad.c)
+            display/glad.c
+            audio/audio.cpp)
 
 set (HEADERS cpu/chip8.hpp
             display/display.hpp
             display/glad.h
-            display/khrplatform.h)
+            display/khrplatform.h
+            audio/audio.h)
 
 add_executable(CHIP-8 ${SOURCES} ${HEADERS})
 
