@@ -8,12 +8,12 @@ set (HEADERS cpu/chip8.hpp
             display/glad.h
             display/khrplatform.h)
 
-add_executable(EmuC8 ${SOURCES} ${HEADERS})
+add_executable(CHIP-8 ${SOURCES} ${HEADERS})
 
 include_directories(cpu display)
 
 # Link GLFW3 with the App
-target_link_libraries(EmuC8 glfw)
+target_link_libraries(CHIP-8 glfw)
 
 #target_link_libraries(EmuC8 ${OPENGL_LIBRARIES})
 #target_link_libraries(EmuC8 ${GLFW_STATIC_LIBRARIES})
