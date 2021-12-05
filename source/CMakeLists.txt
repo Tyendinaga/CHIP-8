@@ -15,6 +15,9 @@ include_directories(cpu display)
 # Link GLFW3 with the App
 target_link_libraries(CHIP-8 glfw)
 
+# Link PortAudio with the App
+target_link_libraries(CHIP-8 portaudio)
+
 #target_link_libraries(EmuC8 ${OPENGL_LIBRARIES})
 #target_link_libraries(EmuC8 ${GLFW_STATIC_LIBRARIES})
 #target_link_libraries(EmuC8 pthread)

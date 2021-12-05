@@ -36,8 +36,11 @@ if(WIN32)
     set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-    # Get
+    # Build GLFW3
     add_subdirectory(external/glfw-3.3.4)
+
+    # Build Port Audio
+    add_subdirectory(external/portaudio-19.7.0)
 
 endif()
 
