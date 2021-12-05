@@ -519,7 +519,6 @@ void chip8::emulateCycle()
 				//FX18 Set Sound Timer to X
 				case 0x0018:
 				{
-                    std::cout << "Timer Set: " << ((opcode & 0x0F00) >> 8) << std::endl;
 					soundTimer = (opcode & 0x0F00) >> 8;
 					advanceProgram();
 					break;
