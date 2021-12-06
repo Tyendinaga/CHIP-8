@@ -13,11 +13,6 @@
 #include "cpu/chip8.hpp"
 #include "display/display.hpp"
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode, void *parameter)
-{
-    std::cout << "Key Callback" << std::endl;
-}
-
 int main()
 {
 	//Cute little baby processor
@@ -28,10 +23,19 @@ int main()
 	processor->initialize();
 	window.initialize();
 
-    glfwSetKeyCallback(window.GetWindow(), reinterpret_cast<GLFWkeyfun>(key_callback));
+    /**
+     * Set User Pointer
+     *
+     * Setting the user pointer lets us retrieve this value later.
+     */
+    glfwSetWindowUserPointer(window.GetWindow(), processor.get());
+
+    glfwSetKeyCallback(window.GetWindow(), reinterpret_cast<GLFWkeyfun>(chip8::KeyInput));
+
+
 
 	//We're just going to hard code pong for now
-	if (!processor->loadGame("PONG.C8"))
+	if (!processor->loadGame("HELLO.C8"))
     {
         glfwTerminate();
         std::cout << "TERMINATING EMULATOR" << std::endl;

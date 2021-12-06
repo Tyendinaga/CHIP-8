@@ -58,6 +58,8 @@ class chip8 {
         Buzzer Sound;
 
 		//Functions
+        static void KeyInput(GLFWwindow* window, int key, int scancode, int action, int mode, void *parameter);
+
 		void initialize();
 		bool loadGame(const std::string& game);
 		void emulateCycle();
