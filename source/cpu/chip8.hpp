@@ -17,8 +17,10 @@ class chip8 {
 
 	public:
 
+        // Constructor
         chip8();
 
+        // Destructor
         ~chip8();
 
 		bool halted; //Debug Use Only

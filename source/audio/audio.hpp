@@ -1,23 +1,7 @@
 #pragma once
 
-void testAudio();
-
-#define SAMPLE_RATE   (44100)
-#define FRAMES_PER_BUFFER  (64)
-
-#ifndef M_PI
-#define M_PI  (3.14159265)
-#endif
-
-#define TABLE_SIZE   (200)
-typedef struct
-{
-    float sine[TABLE_SIZE];
-    int left_phase;
-    int right_phase;
-    char message[20];
-}
-paTestData;
+// External Libs
+#include <portaudio.h>
 
 class Buzzer
 {
@@ -33,6 +17,17 @@ public:
     //
     static int GetSampleRate();
     static int GetBufferSize();
+
+    void Start();
+    void Stop();
+
+private:
+
+    static int GetAudio(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData);
+
+    PaStream* Stream;
+    PaStreamParameters Output;
+
 };
 
 

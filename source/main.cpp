@@ -20,13 +20,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 int main()
 {
-    //testAudio();
-
 	//Cute little baby processor
-
     std::unique_ptr<chip8> processor(new chip8());
-
-	//chip8 processor;
 	display window;
 
 	//Initialize Shit
