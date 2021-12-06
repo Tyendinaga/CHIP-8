@@ -30,6 +30,9 @@ int main()
      */
     glfwSetWindowUserPointer(window.GetWindow(), processor.get());
 
+    /**
+     * Set Callback Keys
+     */
     glfwSetKeyCallback(window.GetWindow(), reinterpret_cast<GLFWkeyfun>(chip8::KeyInput));
 
 

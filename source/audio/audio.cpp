@@ -63,7 +63,7 @@ Buzzer::Buzzer()
     /**
      * Open Stream
      */
-    Pa_OpenStream(
+    auto error = Pa_OpenStream(
             &Stream,
             nullptr,
             &Output,
@@ -72,6 +72,10 @@ Buzzer::Buzzer()
             paClipOff,
             GetAudio,
             nullptr);
+
+    std::cout << "Error Number: " << error << std::endl;
+    std::cout << "Error Text: " << Pa_GetErrorText(error) << std::endl;
+
 }
 
 /**
@@ -81,11 +85,7 @@ Buzzer::Buzzer()
  */
 Buzzer::~Buzzer()
 {
-    //
     std::cout << "Killing Buzzer" << std::endl;
-
-    // Close Stream
-    Pa_CloseStream(Stream);
 
     // Shutdown Port Audio
     Pa_Terminate();
@@ -126,6 +126,13 @@ int Buzzer::GetAudio(const void *inputBuffer, void *outputBuffer, unsigned long 
  */
 void Buzzer::Start()
 {
+    auto Active = Pa_IsStreamActive(Stream);
+
+    if (Active == 1) {
+        return;
+    }
+
+    std::cout << "Starting Stream" << std::endl;
     Pa_StartStream(Stream);
 }
 
@@ -134,6 +141,13 @@ void Buzzer::Start()
  */
 void Buzzer::Stop()
 {
+    auto Active = Pa_IsStreamActive(Stream);
+
+    if (Active <= 0) {
+        return;
+    }
+
+    std::cout << "Stopping Stream" << std::endl;
     Pa_StopStream(Stream);
 }
 

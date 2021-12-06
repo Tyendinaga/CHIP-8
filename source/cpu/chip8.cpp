@@ -19,6 +19,8 @@ Memory Map
 chip8::chip8()
 {
     std::cout << "Initializing CPU" << std::endl;
+
+    Sound.reset(new Buzzer);
 }
 
 chip8::~chip8()
@@ -627,12 +629,12 @@ void chip8::emulateCycle()
 
 	if (soundTimer > 0)
 	{
-        Sound.Start();
+        Sound->Start();
 		soundTimer--;
 	}
     else
     {
-        Sound.Stop();
+        Sound->Stop();
     }
 }
 

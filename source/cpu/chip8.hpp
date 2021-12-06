@@ -2,6 +2,7 @@
 
 // Standard Libs
 #include <string>
+#include <memory>
 
 // External Libs
 #include <GLFW/glfw3.h>
@@ -55,7 +56,7 @@ class chip8 {
 		bool drawFlag; 
 
         // Buzzer Hardware
-        Buzzer Sound;
+        std::unique_ptr<Buzzer> Sound;
 
 		//Functions
         static void KeyInput(GLFWwindow* window, int key, int scancode, int action, int mode, void *parameter);
