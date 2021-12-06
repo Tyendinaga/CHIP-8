@@ -622,14 +622,18 @@ void chip8::emulateCycle()
 	//Update Timers
 	if (delayTimer > 0)
 	{
-		--delayTimer;
+		delayTimer--;
 	}
 
 	if (soundTimer > 0)
 	{
-        testAudio();
-		--soundTimer;
+        Sound.Start();
+		soundTimer--;
 	}
+    else
+    {
+        Sound.Stop();
+    }
 }
 
 void chip8::advanceProgram() 

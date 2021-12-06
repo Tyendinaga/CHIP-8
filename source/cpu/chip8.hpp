@@ -55,7 +55,7 @@ class chip8 {
 		bool drawFlag; 
 
         // Buzzer Hardware
-        Buzzer sound;
+        Buzzer Sound;
 
 		//Functions
 		void initialize();

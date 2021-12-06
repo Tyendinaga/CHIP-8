@@ -91,22 +91,30 @@ Buzzer::~Buzzer()
     Pa_Terminate();
 }
 
+/**
+ * Generate Sawtooth Pattern
+ *
+ * This function generates a simple Sawtooth pattern in a range of +- 0.5f. This is used to create the buzzer sound that
+ * the CHIP-8 needs in order to emulate the systems buzzer component.
+ */
 int Buzzer::GetAudio(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData)
 {
-
-    // Needing for Math Stuff
-    const double pi = 3.14159265;
 
     // The output buffer for Audio
     float *out = (float*)outputBuffer;
 
-    //sin(0.0);
-
-    //(float) sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. );
+    float Input = 0.0f;
 
     for(unsigned long i=0; i<framesPerBuffer; i++ )
     {
-        *out++ = 0.3;
+        *out++ = Input;
+
+        Input += 0.01f;
+
+        if (Input >= 0.5f)
+        {
+            Input = -0.5f;
+        }
     }
 
     // Keep Playing
@@ -114,7 +122,7 @@ int Buzzer::GetAudio(const void *inputBuffer, void *outputBuffer, unsigned long 
 }
 
 /**
- * Buzzer Should Start
+ * Start Buzzer
  */
 void Buzzer::Start()
 {
