@@ -1,6 +1,7 @@
 #include "chip8.hpp"
 
 // Standard Libs
+#include <memory>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -20,7 +21,7 @@ chip8::chip8()
 {
     std::cout << "Initializing CPU" << std::endl;
 
-    Sound.reset(new Buzzer);
+    Sound = std::make_unique<Buzzer>();
 }
 
 chip8::~chip8()
