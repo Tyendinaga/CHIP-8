@@ -1,15 +1,15 @@
-//Standard Crap
+// Standard Libraries
 #include <cstdlib>
 #include <thread>
 #include <chrono>
 #include <iostream>
 #include <memory>
 
-//External Shit
+// External Libraries
 #include "display/glad.h"
 #include <GLFW/glfw3.h>
 
-//Custom Shit
+// Custom Libraries
 #include "cpu/chip8.hpp"
 #include "display/display.hpp"
 
@@ -38,7 +38,7 @@ int main()
 
 
 	//We're just going to hard code pong for now
-	if (!processor->loadGame("HELLO.C8"))
+	if (!processor->loadGame("PONG.C8"))
     {
         glfwTerminate();
         std::cout << "TERMINATING EMULATOR" << std::endl;
