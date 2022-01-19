@@ -29,6 +29,9 @@ bool display::initialize()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    // Don't resize the window
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
 	//Create a 640 by 320 Window to play the game in.
 	window = glfwCreateWindow(640, 320, "EmuC80", nullptr, nullptr);
 	if (!window)
@@ -131,7 +134,7 @@ bool display::initialize()
 }
 
 //Draw Game Shit
-void display::drawGraphics(chip8 processor)
+void display::drawGraphics(chip8* processor)
 {
 	//VAO Storage
 	std::vector<unsigned int> VAOa;
@@ -143,7 +146,7 @@ void display::drawGraphics(chip8 processor)
 		//Iterate Through Columns
 		for (int x = 0; x < 64; ++x)
 		{
-			if (processor.graphics[(y * 64) + x] == 0)
+			if (processor->graphics[(y * 64) + x] == 0)
 			{
 
 			}
@@ -246,6 +249,11 @@ void display::framebufferSizeCallback(GLFWwindow * window, int width, int height
 {
 	std::cout << "Frame Buffer Updated" << std::endl;
 	glViewport(0, 0, width, height);
+}
+
+GLFWwindow* display::GetWindow()
+{
+    return window;
 }
 
 

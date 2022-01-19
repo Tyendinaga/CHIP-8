@@ -1,10 +1,12 @@
-//Standard Shit
+#include "chip8.hpp"
+
+// Standard Libs
 #include <string>
 #include <iostream>
 #include <fstream>
 
-//Custom Shit
-#include "chip8.hpp"
+// Internal Stuff
+#include "../audio/audio.hpp"
 
 /*
 Memory Map
@@ -13,6 +15,18 @@ Memory Map
 0x050-0x0A0 - Used for the built in 4x5 pixel font set (0-F)
 0x200-0xFFF - Program ROM and work RAM
 */
+
+chip8::chip8()
+{
+    std::cout << "Initializing CPU" << std::endl;
+
+    Sound.reset(new Buzzer);
+}
+
+chip8::~chip8()
+{
+    std::cout << "Killing CPU" << std::endl;
+}
 
 void chip8::initialize()
 {
@@ -139,9 +153,9 @@ void chip8::emulateCycle()
 			switch (opcode & 0x00F)
 			{
 
-				//Not Emulated 0NNN For Reasons
+				// Not Emulated 0NNN For Reasons
 
-				//00E0 (Clear Screen)
+				// 00E0 (Clear Screen)
 				case 0x0000: 
 				{
 					clearDisplay();
@@ -150,10 +164,10 @@ void chip8::emulateCycle()
 					break;
 				}
 
-				//00EE (Return from SubRoutine)
+				// 00EE (Return from SubRoutine)
 				case 0x000E: 
 				{
-					//Return back to the previous stack position and set program counter to the stored address
+					// Return to the previous stack position and set program counter to the stored address
 					stackPosition--;
 					programCounter = stack[stackPosition];
 					advanceProgram();
@@ -173,7 +187,7 @@ void chip8::emulateCycle()
 		}
 
 
-		//1NNN Jumps to Addres NNN
+		//1NNN Jumps to Address NNN
 		case 0x1000:
 		{
 			programCounter = (opcode & 0x0FFF);
@@ -496,7 +510,7 @@ void chip8::emulateCycle()
 				{
 					for(int i = 0; i < 16; i++)
 					{
-						if (key[i != 0])
+						if (key[i] !=0)
 						{
 							advanceProgram();
 							registers[(opcode & 0x0F00) >> 8] = 1;
@@ -610,25 +624,20 @@ void chip8::emulateCycle()
 	//Update Timers
 	if (delayTimer > 0)
 	{
-		--delayTimer;
+		delayTimer--;
 	}
 
 	if (soundTimer > 0)
 	{
-		if (soundTimer == 1)
-		{
-			//TODO: Play Sound
-		}
-
-		--soundTimer;
+        Sound->Start();
+		soundTimer--;
 	}
+    else
+    {
+        Sound->Stop();
+    }
 }
 
-void chip8::setKeys()
-{
-    //do nothing
-}
- 
 void chip8::advanceProgram() 
 {
 	programCounter += 2;
@@ -669,5 +678,43 @@ bool chip8::loadGame(const std::string& progName)
 
 	// ROM Loaded Successfully
 	return true;
+}
+
+void chip8::KeyInput(GLFWwindow *window, int key, int scancode, int action, int mode, void *parameter)
+{
+    auto cpu = static_cast<chip8*>(glfwGetWindowUserPointer(window));
+
+    // We only want to check an initial key press
+    if (action == GLFW_PRESS)
+    {
+
+        switch (key)
+        {
+            case GLFW_KEY_W:
+                cpu->key[7] = 1;
+                break;
+            case GLFW_KEY_S:
+                cpu->key[4] = 1;
+                break;
+            default:
+                break;
+        }
+    }
+
+    if (action == GLFW_RELEASE)
+    {
+
+        switch (key)
+        {
+            case GLFW_KEY_W:
+                cpu->key[7] = 0;
+                break;
+            case GLFW_KEY_S:
+                cpu->key[4] = 0;
+                break;
+            default:
+                break;
+        }
+    }
 }
 
