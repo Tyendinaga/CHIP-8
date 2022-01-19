@@ -28,27 +28,27 @@ void chip8::initialize()
 	
 	//Clear Stack
 	stackPosition = 0;
-	for (int i = 0; i < 16; i++)
+	for (unsigned short & i : stack)
 	{
-		stack[i] = 0;
+		i = 0;
 	}
 
 	// Clear Registers V0 - VF
-	for (int i = 0; i < 16; i++)
+	for (unsigned char & i : registers)
 	{
-		registers[i] = 0;
+		i = 0;
 	}
 
 	// Clear the Keywhatsits.
-	for (int i = 0; i < 16; i++)
+	for (unsigned char & i : key)
 	{
-		key[i] = 0;
+		i = 0;
 	}
 
 	// Clear Memory
-	for (int i = 0; i < 4096; i++)
+	for (unsigned char & i : memory)
 	{
-		memory[i] = 0;
+		i = 0;
 	}
 
 
