@@ -130,6 +130,14 @@ bool display::initialize()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
+    //USE THE SHADER PROGRAM
+    //-----------------
+    glUseProgram(shaderProgram);
+
+    // SET CLEAR COLOUR
+    //-----------------
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
 	return true;
 }
 
@@ -139,6 +147,10 @@ void display::drawGraphics(chip8* processor)
 	//VAO Storage
 	std::vector<unsigned int> VAOa;
 	std::vector<unsigned int>::iterator VAOi;
+
+    //VBO Storage
+    std::vector<unsigned int> VBOa;
+    std::vector<unsigned int>::iterator VBOi;
 
 	//Iterate Through Rows
 	for (int y = 0; y < 32; ++y)
@@ -174,21 +186,18 @@ void display::drawGraphics(chip8* processor)
 				};
 
 				//Add 'Pixel'
-				VAOa.push_back(generate(vertices1));
-				VAOa.push_back(generate(vertices2));
+				generate(vertices1, VAOa, VBOa);
+				generate(vertices2, VAOa, VBOa);
 			}
 		}
 	}
 
 	//RENDER BACKGROUND COLOUR
 	//------------------------
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	//DRAW OUR TRIANGLE
-	//-----------------
-	glUseProgram(shaderProgram);
-
+    //DRAW OUR TRIANGLE
+    //-----------------
 	//Iterate through VAO Vector
 	for (VAOi = VAOa.begin(); VAOi < VAOa.end(); VAOi++)
 	{
@@ -204,40 +213,45 @@ void display::drawGraphics(chip8* processor)
 		glDeleteVertexArrays(1, &*VAOi);
 	}
 
-	//Kill
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
+    //Iterate through VBO Vector
+    for (VBOi = VBOa.begin(); VBOi < VBOa.end(); VBOi++)
+    {
+        glDeleteBuffers(1, &*VBOi);
+    }
 }
 
-unsigned int display::generate(std::vector<float> vertices)
-{
-	
-	//Get Size of Vertices Vector in Bytes
-	GLsizei size = vertices.size() * sizeof(vertices[0]);
+void display::generate(std::vector<float> vertices, std::vector<unsigned int> &VAOa, std::vector<unsigned int> &VBOa) {
 
-	//GENERATE ARRAYS AND BUFFERS
-	//---------------------------
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
+    unsigned int VAO;
+    unsigned int VBO;
 
-	//BINDING
-	//-------
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, size, &vertices[0], GL_STATIC_DRAW);
+    //Get Size of Vertices Vector in Bytes
+    GLsizei size = vertices.size() * sizeof(vertices[0]);
 
-	//BIND VBO
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-	glEnableVertexAttribArray(0);
+    //GENERATE ARRAYS AND BUFFERS
+    //---------------------------
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
 
-	//Do not Work with Vertex Array
-	glBindVertexArray(0);
+    //BINDING
+    //-------
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, size, &vertices[0], GL_STATIC_DRAW);
 
-	//Do not work with Buffer
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //BIND VBO
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(0);
 
-	//This points to some shit on Memory
-	return VAO;
+    //Do not Work with Vertex Array
+    glBindVertexArray(0);
+
+    //Do not work with Buffer
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Save Data
+    VAOa.push_back(VAO);
+    VBOa.push_back(VBO);
 }
 
 bool display::shouldClose()
@@ -255,5 +269,7 @@ GLFWwindow* display::GetWindow()
 {
     return window;
 }
+
+
 
 

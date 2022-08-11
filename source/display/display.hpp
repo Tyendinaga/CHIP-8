@@ -18,9 +18,8 @@ private:
 	int shaderProgram;
 
 	//Thingers
-	unsigned int VBO;
-	unsigned int VAO;
-	unsigned int VAO2;
+	//unsigned int VBO;
+	//unsigned int VAO;
 
 public:
 
@@ -34,7 +33,7 @@ public:
 	static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 
     // Vars
-	unsigned int generate(std::vector<float> vertices);
+	void generate(std::vector<float> vertices, std::vector<unsigned int>& VAOa, std::vector<unsigned int>& VBOa);
 	
 };
 
