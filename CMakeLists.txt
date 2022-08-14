@@ -2,8 +2,11 @@
 # GENERAL SETUP
 #
 
-cmake_minimum_required(VERSION 3.5.0)
-project(chip8-emu)
+cmake_minimum_required(VERSION 3.16)
+project(CHIP-8)
+
+# Print CMAKE Version
+message(${CMAKE_VERSION})
 
 # ##########################################
 # External Packages
@@ -23,6 +26,11 @@ if(WIN32)
 
     # Build Port Audio
     add_subdirectory(external/portaudio-19.7.0)
+
+    # Get QT Package.
+    set(CMAKE_PREFIX_PATH "C:\\Qt\\6.3.1\\msvc2019_64\\lib\\cmake")
+    find_package(Qt6 REQUIRED COMPONENTS Widgets)
+    qt_standard_project_setup()
 
 endif()
 
