@@ -8,7 +8,7 @@
 #include <GLFW/glfw3.h>
 
 // Custom Stuff
-#include "../audio/audio.hpp"
+#include <audio.hpp>
 
 class chip8 {
 	private:

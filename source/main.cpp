@@ -13,8 +13,13 @@
 #include "cpu/chip8.hpp"
 #include "display/display.hpp"
 
-int main()
+// QT Stuff
+#include <QtCore>
+
+int main(int argc, char **argv)
 {
+    std::cout << "Qt Version: " << qVersion() << std::endl;
+
 	//Cute little baby processor
     std::unique_ptr<chip8> processor(new chip8());
 	display window;
