@@ -1,3 +1,7 @@
+
+
+
+
 set(SOURCES main.cpp
     cpu/chip8.cpp
     display/display.cpp
@@ -16,13 +20,22 @@ include_directories(cpu display)
 
 # Link in Audio Library
 add_subdirectory(audio)
-target_link_libraries(CHIP-8 buzzer)
+target_link_libraries(CHIP-8
+    buzzer
+)
+
+# Link in Gui Library
+add_subdirectory(gui)
+target_link_libraries(CHIP-8
+    CHIP-8_UI
+)
 
 # Link GLFW3 with the App
-target_link_libraries(CHIP-8 glfw)
+target_link_libraries(CHIP-8
+    glfw
+)
 
 # Link PortAudio with the App
-target_link_libraries(CHIP-8 portaudio_static)
-
-# Link QT Into the App
-target_link_libraries(CHIP-8 Qt6::Widgets)
+target_link_libraries(CHIP-8
+    portaudio_static
+)

@@ -4,12 +4,13 @@
 #include <QWidget>
 
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class TestWindow; }
-QT_END_NAMESPACE
+namespace Ui
+{
+    class TestWindow;
+}
 
-class TestWindow : public QWidget {
-Q_OBJECT
+class TestWindow : public QWidget
+{
 
 public:
     explicit TestWindow(QWidget *parent = nullptr);

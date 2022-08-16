@@ -15,10 +15,17 @@
 
 // QT Stuff
 #include <QtCore>
+#include <QApplication>
+#include <testwindow.h>
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
     std::cout << "Qt Version: " << qVersion() << std::endl;
+
+    QApplication app(argc, argv);
+    TestWindow qWindow;
+    qWindow.show();
+    app.exec();
 
 	//Cute little baby processor
     std::unique_ptr<chip8> processor(new chip8());

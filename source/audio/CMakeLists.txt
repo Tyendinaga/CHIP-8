@@ -14,6 +14,6 @@ target_sources(buzzer
 target_include_directories(buzzer
     PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}
-    )
+)
 
 target_link_libraries(buzzer portaudio_static)
