@@ -3,11 +3,14 @@
 set (SRC_FILES
     testwindow.cpp
     testwindow.h
+    main_window.cpp
+    main_window.h
 )
 
 # Get UI Files
 set (UI_FILES
     testwindow.ui
+    main_window.ui
 )
 
 # Create Library
