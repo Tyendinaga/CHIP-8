@@ -1,16 +1,13 @@
 
 # Get Source Files
 set (SRC_FILES
-    testwindow.cpp
-    testwindow.h
-    main_window.cpp
-    main_window.h
+    mainwindow.cpp
+    mainwindow.h
 )
 
 # Get UI Files
 set (UI_FILES
-    testwindow.ui
-    main_window.ui
+    mainwindow.ui
 )
 
 # Create Library
