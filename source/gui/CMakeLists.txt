@@ -10,8 +10,17 @@ set (UI_FILES
     mainwindow.ui
 )
 
+# Get Resources
+set (RES_FILES
+    resources.qrc
+)
+
 # Create Library
-add_library(CHIP-8_UI ${SRC_FILES} ${UI_FILES})
+add_library(CHIP-8_UI
+    ${SRC_FILES}
+    ${UI_FILES}
+    ${RES_FILES}
+)
 
 # Bunch of Automatic QT Bullshit.
 set_target_properties(CHIP-8_UI
