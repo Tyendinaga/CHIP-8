@@ -9,6 +9,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     // Trigger About QT Popup on Click
     connect(ui->actionAbout_Qt, &QAction::triggered, qApp, &QApplication::aboutQt);
+
+    // Exit Application on Selection of Exit
+    connect(ui->actionExit, &QAction::triggered, qApp, &QApplication::closeAllWindows);
 }
 
 MainWindow::~MainWindow() {

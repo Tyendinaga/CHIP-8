@@ -14,7 +14,7 @@
    <string>PCC8</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources.qrc">
+   <iconset>
     <normaloff>:/resources/application.ico</normaloff>:/resources/application.ico</iconset>
   </property>
   <widget class="QWidget" name="centralwidget"/>
@@ -31,11 +31,15 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionBoot_Game"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionAbout_PCC8"/>
     <addaction name="actionAbout_Qt"/>
    </widget>
    <addaction name="menuTest"/>
@@ -45,6 +49,21 @@
   <action name="actionAbout_Qt">
    <property name="text">
     <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionAbout_PCC8">
+   <property name="text">
+    <string>About PCC8</string>
+   </property>
+  </action>
+  <action name="actionBoot_Game">
+   <property name="text">
+    <string>Boot Game</string>
    </property>
   </action>
  </widget>
