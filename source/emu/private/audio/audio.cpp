@@ -6,7 +6,7 @@
 #include <math.h>
 
 // External Libs
-#include <portaudio.h>
+#include "portaudio.h"
 
 /**
  * Constructor

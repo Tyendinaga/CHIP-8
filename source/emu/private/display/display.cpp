@@ -4,7 +4,7 @@
 
 //External Shit
 #include "glad.h"
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 
 //Custom Shit
 #include "display.hpp"
@@ -142,7 +142,7 @@ bool display::initialize()
 }
 
 //Draw Game Shit
-void display::drawGraphics(chip8* processor)
+void display::drawGraphics(cpu* processor)
 {
 	//VAO Storage
 	std::vector<unsigned int> VAOa;

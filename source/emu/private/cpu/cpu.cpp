@@ -1,4 +1,4 @@
-#include "chip8.hpp"
+#include "cpu.hpp"
 
 // Standard Libs
 #include <memory>
@@ -14,19 +14,19 @@ Memory Map
 0x200-0xFFF - Program ROM and work RAM
 */
 
-chip8::chip8()
+cpu::cpu()
 {
     std::cout << "Initializing CPU" << std::endl;
 
     Sound = std::make_unique<Buzzer>();
 }
 
-chip8::~chip8()
+cpu::~cpu()
 {
     std::cout << "Killing CPU" << std::endl;
 }
 
-void chip8::initialize()
+void cpu::initialize()
 {
 	programCounter = 0x200;
 	opcode = 0;
@@ -100,14 +100,14 @@ void chip8::initialize()
 
 }
 
-void chip8::clearDisplay() {
+void cpu::clearDisplay() {
 	for (int i = 0; i < 2048; i++)
 	{
 		graphics[i] = 0;
 	}
 }
 
-void chip8::emulateCycle()
+void cpu::emulateCycle()
 {
 	// Fetch opcode
 	opcode = memory[programCounter] << 8 | memory[programCounter + 1];
@@ -636,12 +636,12 @@ void chip8::emulateCycle()
     }
 }
 
-void chip8::advanceProgram() 
+void cpu::advanceProgram()
 {
 	programCounter += 2;
 }
 
-bool chip8::loadGame(const std::string& progName)
+bool cpu::loadGame(const std::string& progName)
 {
 	std::cout << "LOADING ROM: " << progName << std::endl;
 
@@ -678,9 +678,9 @@ bool chip8::loadGame(const std::string& progName)
 	return true;
 }
 
-void chip8::KeyInput(GLFWwindow *window, int key, int scancode, int action, int mode, void *parameter)
+void cpu::KeyInput(GLFWwindow *window, int key, int scancode, int action, int mode, void *parameter)
 {
-    auto cpu = static_cast<chip8*>(glfwGetWindowUserPointer(window));
+    auto processor = static_cast<cpu*>(glfwGetWindowUserPointer(window));
 
     // We only want to check an initial key press
     if (action == GLFW_PRESS)
@@ -689,10 +689,10 @@ void chip8::KeyInput(GLFWwindow *window, int key, int scancode, int action, int 
         switch (key)
         {
             case GLFW_KEY_W:
-                cpu->key[7] = 1;
+                processor->key[7] = 1;
                 break;
             case GLFW_KEY_S:
-                cpu->key[4] = 1;
+                processor->key[4] = 1;
                 break;
             default:
                 break;
@@ -705,14 +705,13 @@ void chip8::KeyInput(GLFWwindow *window, int key, int scancode, int action, int 
         switch (key)
         {
             case GLFW_KEY_W:
-                cpu->key[7] = 0;
+                processor->key[7] = 0;
                 break;
             case GLFW_KEY_S:
-                cpu->key[4] = 0;
+                processor->key[4] = 0;
                 break;
             default:
                 break;
         }
     }
 }
-

@@ -5,12 +5,12 @@
 #include <memory>
 
 // External Libs
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 
 // Custom Stuff
-#include <audio.hpp>
+#include "audio/audio.hpp"
 
-class chip8 {
+class cpu {
 	private:
     
 		void clearDisplay();
@@ -19,10 +19,10 @@ class chip8 {
 	public:
 
         // Constructor
-        chip8();
+        cpu();
 
         // Destructor
-        ~chip8();
+        ~cpu();
 
 		bool halted; //Debug Use Only
 

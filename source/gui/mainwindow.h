@@ -16,4 +16,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    void BootGame();
 };
