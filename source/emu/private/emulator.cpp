@@ -51,18 +51,21 @@ void emulator::Boot() {
 		// Sleep for 16 Milliseconds between cycles
 		std::this_thread::sleep_for(std::chrono::milliseconds(16));
 
-        //
-		if (!processor->halted)
-		{
-			processor->emulateCycle();
-		}
+        if (!paused) {
 
-        //
-		if (processor->drawFlag)
-		{
-			window.drawGraphics(processor.get());
-			processor->drawFlag = false;
-		}
+            if (!processor->halted)
+            {
+                processor->emulateCycle();
+            }
+
+            //
+            if (processor->drawFlag)
+            {
+                window.drawGraphics(processor.get());
+                processor->drawFlag = false;
+            }
+        }
+
 
 		//Base GLFW Stuff to keep the window happy till I get shit working.
 		glfwPollEvents();
@@ -71,4 +74,12 @@ void emulator::Boot() {
 	//Close out everything and call it successful
 	glfwTerminate();
 
+}
+
+void emulator::Play() {
+    paused = false;
+}
+
+void emulator::Pause() {
+    paused = true;
 }
