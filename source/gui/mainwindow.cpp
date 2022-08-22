@@ -6,6 +6,10 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
+
+    // Instantiate Emulator
+    emu = std::make_unique<emulator>();
+
     // No Idea what this actually does.
     ui->setupUi(this);
 
@@ -18,6 +22,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //
     connect(ui->actionBoot_Game, &QAction::triggered, this, &MainWindow::BootGame);
 
+    //
+    connect(ui->actionStart, &QAction::triggered, this, &MainWindow::Play);
+
+    //
+    connect(ui->actionStop, &QAction::triggered, this, &MainWindow::Pause);
 }
 
 MainWindow::~MainWindow() {
@@ -26,9 +35,13 @@ MainWindow::~MainWindow() {
 
 void MainWindow::BootGame() {
     std::cout << "Test boot";
-
-    std::unique_ptr<emulator> emu(new emulator());
-
     emu->Boot();
+}
 
+void MainWindow::Play() {
+    emu->Play();
+}
+
+void MainWindow::Pause() {
+    emu->Pause();
 }

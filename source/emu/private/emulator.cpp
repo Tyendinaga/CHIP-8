@@ -13,7 +13,9 @@
 #include "cpu/cpu.hpp"
 #include "display/display.hpp"
 
-emulator::emulator() = default;
+emulator::emulator() {
+    paused = false;
+};
 
 void emulator::Boot() {
 
@@ -51,7 +53,9 @@ void emulator::Boot() {
 		// Sleep for 16 Milliseconds between cycles
 		std::this_thread::sleep_for(std::chrono::milliseconds(16));
 
-        if (!paused) {
+
+        if (!paused)
+        {
 
             if (!processor->halted)
             {

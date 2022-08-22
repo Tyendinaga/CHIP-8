@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include <emulator.hpp>
 
 namespace Ui
 {
@@ -18,4 +19,10 @@ private:
     Ui::MainWindow *ui;
 
     void BootGame();
+
+    void Play();
+    void Pause();
+
+    // Emulator
+    std::unique_ptr<emulator> emu;
 };
