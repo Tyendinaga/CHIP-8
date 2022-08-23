@@ -17,7 +17,7 @@ emulator::emulator() {
     paused = false;
 };
 
-void emulator::Boot() {
+void emulator::Boot(std::string image) {
 
     //Cute little baby processor
     std::unique_ptr<cpu> processor(new cpu());
@@ -40,7 +40,7 @@ void emulator::Boot() {
     glfwSetKeyCallback(window.GetWindow(), reinterpret_cast<GLFWkeyfun>(cpu::KeyInput));
 
 	//We're just going to hard code pong for now
-	if (!processor->loadGame("PONG.C8"))
+	if (!processor->loadGame(image))
     {
         glfwTerminate();
         std::cout << "TERMINATING EMULATOR" << std::endl;

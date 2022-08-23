@@ -19,6 +19,7 @@ private:
     Ui::MainWindow *ui;
 
     void BootGame();
+    void BootTest();
 
     void Play();
     void Pause();

@@ -23,6 +23,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->actionBoot_Game, &QAction::triggered, this, &MainWindow::BootGame);
 
     //
+    connect(ui->actionBoot_Test, &QAction::triggered, this, &MainWindow::BootTest);
+
+    //
     connect(ui->actionStart, &QAction::triggered, this, &MainWindow::Play);
 
     //
@@ -35,7 +38,12 @@ MainWindow::~MainWindow() {
 
 void MainWindow::BootGame() {
     std::cout << "Test boot";
-    emu->Boot();
+    emu->Boot("PONG.C8");
+}
+
+void MainWindow::BootTest() {
+    std::cout << "Test boot";
+    emu->Boot("TEST_OPCODE.C8");
 }
 
 void MainWindow::Play() {
@@ -45,3 +53,5 @@ void MainWindow::Play() {
 void MainWindow::Pause() {
     emu->Pause();
 }
+
+
