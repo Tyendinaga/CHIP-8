@@ -264,7 +264,7 @@ void cpu::emulateCycle()
 				//8XY0 Set X to Y
 				case 0x0000:
 				{
-					registers[(opcode & 0x0F00) >> 8] = registers[(opcode & 0x0F00) >> 8];
+					registers[(opcode & 0x0F00) >> 8] = registers[(opcode & 0x00F0) >> 4];
 					advanceProgram();
 					break;
 				}
