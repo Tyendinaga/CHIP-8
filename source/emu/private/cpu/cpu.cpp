@@ -184,7 +184,6 @@ void cpu::emulateCycle()
 			break;
 		}
 
-
 		//1NNN Jumps to Address NNN
 		case 0x1000:
 		{
