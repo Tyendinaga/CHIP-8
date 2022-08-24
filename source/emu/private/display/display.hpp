@@ -4,8 +4,8 @@
 
 //External Shit
 #include "glad.h"
-#include <GLFW/glfw3.h>
-#include "../cpu/chip8.hpp"
+#include "GLFW/glfw3.h"
+#include "cpu/cpu.hpp"
 #include <vector>
 
 class display {
@@ -28,7 +28,7 @@ public:
 
 	//Functions
 	bool initialize();
-	void drawGraphics(chip8* processor);
+	void drawGraphics(cpu* processor);
 	bool shouldClose();
 	static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 

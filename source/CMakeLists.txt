@@ -1,26 +1,22 @@
-set(SOURCES main.cpp 
-            cpu/chip8.cpp
-            display/display.cpp
-            display/glad.c
-            audio/audio.cpp)
 
-set (HEADERS cpu/chip8.hpp
-            display/display.hpp
-            display/glad.h
-            display/khrplatform.h
-            audio/audio.hpp)
 
-add_executable(CHIP-8 ${SOURCES} ${HEADERS})
 
-include_directories(cpu display)
 
-# Link GLFW3 with the App
-target_link_libraries(CHIP-8 glfw)
+set(SOURCES
+    main.cpp
+)
 
-# Link PortAudio with the App
-target_link_libraries(CHIP-8 portaudio_static)
+add_executable(CHIP-8
+    ${SOURCES}
+)
 
-#target_link_libraries(EmuC8 ${OPENGL_LIBRARIES})
-#target_link_libraries(EmuC8 ${GLFW_STATIC_LIBRARIES})
-#target_link_libraries(EmuC8 pthread)
-#target_link_libraries(EmuC8 ${X11_LIBRARIES})
+# Link in Gui Library
+add_subdirectory(gui)
+target_link_libraries(CHIP-8
+    chip_gui
+)
+
+add_subdirectory(emu)
+target_link_libraries(CHIP-8
+    chip_emulator
+)
